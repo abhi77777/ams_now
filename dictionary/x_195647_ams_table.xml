@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="AMS Table" max_length="40" name="x_195647_ams_table" type="collection"/>
+</database>
