@@ -42,20 +42,23 @@
 				var cc_addresses = String(current.x_195647_ams_cc_email_addresses).split(',');
                 var request = new sn_ws.RESTMessageV2();
                 request.setHttpMethod('post');
-                var body = JSON.stringify({
+                var params = {
                   communicationBody: 'AMSTestNoOpsActionRequired - ' + current.description,
                   subject: 'AMSTestNoOpsActionRequired - ' + current.short_description,
                   categoryCode: 'other',
-                  ccEmailAddresses: cc_addresses,
                   serviceCode: 'sentinel-report-incident',
                   severityCode: impact
-                });
+                };
+				//if (cc_addresses.length > 0) {
+				//  params.ccEmailAddresses = cc_addresses;
+				//}
                 // why wont this work?
                 //request.setRequestBody(body);
                 //gs.info(request.getRequestBody());
-				gs.info("RUN - send endpoint");
-                request.setEndpoint('http://54.167.195.83:3000/incidents');
-                request.setQueryParameter('params', body);
+				gs.info("RUN - set endpoint");
+                request.setEndpoint('http://91b21d7e3a00801579d29e080c0eb96b7599571e:a8e4d35634a2471e7b03348567abf727231c1e44@54.167.195.83:3000/incidents');
+				request.setEndpoint('http://54.167.195.83:3000/incidents');
+                request.setQueryParameter('params', JSON.stringify(params));
 				gs.info("RUN - execute");
                 var response = request.execute();
                 ams_case_id = JSON.parse(response.getBody()).caseId;
@@ -69,8 +72,7 @@
         }
 
         catch (ex) {
-            var message = ex.getMessage();
-            gs.info(message);
+            gs.info(ex);
         }
     })();
 })(current, previous);]]></script>
@@ -80,7 +82,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>7fb7d674db2413004becfabdbf96195b</sys_id>
-        <sys_mod_count>54</sys_mod_count>
+        <sys_mod_count>62</sys_mod_count>
         <sys_name>CreateAMSIncident</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -88,7 +90,7 @@
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_7fb7d674db2413004becfabdbf96195b</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-02-26 13:12:56</sys_updated_on>
+        <sys_updated_on>2018-02-26 19:00:51</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>
