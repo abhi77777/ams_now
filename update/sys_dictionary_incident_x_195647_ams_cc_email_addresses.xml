@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <record_update>
-    <sys_dictionary action="INSERT_OR_UPDATE" element="x_195647_ams_u_ams_case_id" table="incident">
+    <sys_dictionary action="INSERT_OR_UPDATE" element="x_195647_ams_cc_email_addresses" table="incident">
         <active>true</active>
         <array>false</array>
         <array_denormalized>false</array_denormalized>
-        <attributes>edge_encryption_enabled=true</attributes>
+        <attributes/>
         <audit>false</audit>
-        <calculation/>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
         <choice/>
         <choice_field/>
         <choice_table/>
-        <column_label>AMS Case Id</column_label>
+        <column_label>cc Email Addresses one@email.com,two@email.com</column_label>
         <comments/>
         <create_roles/>
         <default_value/>
@@ -23,7 +28,7 @@
         <dynamic_creation_script/>
         <dynamic_default_value/>
         <dynamic_ref_qual/>
-        <element>x_195647_ams_u_ams_case_id</element>
+        <element>x_195647_ams_cc_email_addresses</element>
         <element_reference>false</element_reference>
         <foreign_database/>
         <internal_type display_value="String">string</internal_type>
@@ -32,7 +37,7 @@
         <name>incident</name>
         <next_element/>
         <primary>false</primary>
-        <read_only>true</read_only>
+        <read_only>false</read_only>
         <read_roles/>
         <reference/>
         <reference_cascade_rule/>
@@ -46,16 +51,16 @@
         <staged>false</staged>
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2018-02-25 23:43:08</sys_created_on>
-        <sys_id>ed6e1445db2813004becfabdbf961943</sys_id>
-        <sys_mod_count>6</sys_mod_count>
-        <sys_name>AMS Case Id</sys_name>
+        <sys_created_on>2018-02-26 12:23:52</sys_created_on>
+        <sys_id>b70c4741db6c13004becfabdbf9619ed</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>cc Email Addresses one@email.com,two@email.com</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
-        <sys_update_name>sys_dictionary_incident_x_195647_ams_u_ams_case_id</sys_update_name>
+        <sys_update_name>sys_dictionary_incident_x_195647_ams_cc_email_addresses</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-02-26 13:16:21</sys_updated_on>
+        <sys_updated_on>2018-02-26 13:06:25</sys_updated_on>
         <table_reference>false</table_reference>
         <text_index>false</text_index>
         <unique>false</unique>

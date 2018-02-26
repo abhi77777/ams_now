@@ -13,13 +13,13 @@
         <change_fields>false</change_fields>
         <client_callable>false</client_callable>
         <collection>incident</collection>
-        <condition/>
+        <condition>current.assignment_group.name == "AMS"</condition>
         <description/>
         <execute_function>false</execute_function>
         <filter_condition/>
         <is_rest>false</is_rest>
         <message/>
-        <name>PushIncident</name>
+        <name>CreateAMSIncident</name>
         <order>100</order>
         <priority>100</priority>
         <rest_method/>
@@ -29,49 +29,50 @@
         <rest_variables/>
         <role_conditions/>
         <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
-    
-    (function sample_http_request() {
-    try {
-        if (current.x_195647_ams_u_ams_case_id == "" ) {
-            var request = new sn_ws.RESTMessageV2();
-            request.setHttpMethod('post');
-            var body = JSON.stringify({
-              communicationBody: 'AMSTestNoOpsActionRequired - ',
-              subject: 'AMSTestNoOpsActionRequired',
-              categoryCode: 'other',
-              ccEmailAddresses: ["fborgnia@gmail.com"],
-              serviceCode: 'sentinel-report-incident',
-              severityCode: 'normal'
-            });
-            request.setEndpoint('http://54.167.195.83:3000/incidents');
-            // why wont this work?
-            //request.setRequestBody(body);
-            //gs.info(request.getRequestBody());
-            request.setQueryParameter('params', body);
-
-            var response = request.execute();
-            var httpResponseStatus = response.getStatusCode();
-            var httpResponseContentType = response.getHeader('Content-Type');
-            gs.info("http response status_code: " + httpResponseStatus);
-            gs.info("http response content-type: " + httpResponseContentType);
-            
-            gs.info("la respuesta" + response.getBody());
-			gs.info("el objecto" + JSON.parse(response.getBody()).caseId);
-			
-            current.x_195647_ams_u_ams_case_id = 'case-364168241140-muen-2018-b32d58938b26f4fc';
-            current.update();
-        } else {
-            gs.info(" Aca ya hay caso!! " + current.x_195647_ams_u_ams_case_id);
+    gs.info("RUN - Create AMS Case");
+    (function create_and_link_ams_incident() {
+        try {
+            if (current.x_195647_ams_u_ams_case_id == "" ) {
+                var impact = 'normal';
+                if (current.impact == 2) {
+                    impact = 'urgent';
+                } else if (current.impact == 1) {
+                    impact = 'critical';
+                }
+				var cc_addresses = String(current.x_195647_ams_cc_email_addresses).split(',');
+                var request = new sn_ws.RESTMessageV2();
+                request.setHttpMethod('post');
+                var body = JSON.stringify({
+                  communicationBody: 'AMSTestNoOpsActionRequired - ' + current.description,
+                  subject: 'AMSTestNoOpsActionRequired - ' + current.short_description,
+                  categoryCode: 'other',
+                  ccEmailAddresses: cc_addresses,
+                  serviceCode: 'sentinel-report-incident',
+                  severityCode: impact
+                });
+                // why wont this work?
+                //request.setRequestBody(body);
+                //gs.info(request.getRequestBody());
+				gs.info("RUN - send endpoint");
+                request.setEndpoint('http://54.167.195.83:3000/incidents');
+                request.setQueryParameter('params', body);
+				gs.info("RUN - execute");
+                var response = request.execute();
+                ams_case_id = JSON.parse(response.getBody()).caseId;
+                gs.info("Created AMS Case ID: " + ams_case_id);
+                
+                current.x_195647_ams_u_ams_case_id = ams_case_id;
+                current.update();
+            } else {
+                gs.info("Incident linked already :" + current.x_195647_ams_u_ams_case_id);
+            }
         }
-            //current.
-    }
 
-    catch (ex) {
-        var message = ex.getMessage();
-        gs.info(message);
-    }
-})();
-
+        catch (ex) {
+            var message = ex.getMessage();
+            gs.info(message);
+        }
+    })();
 })(current, previous);]]></script>
         <sys_class_name>sys_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
@@ -79,15 +80,15 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>7fb7d674db2413004becfabdbf96195b</sys_id>
-        <sys_mod_count>35</sys_mod_count>
-        <sys_name>PushIncident</sys_name>
+        <sys_mod_count>54</sys_mod_count>
+        <sys_name>CreateAMSIncident</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_7fb7d674db2413004becfabdbf96195b</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-02-26 00:25:00</sys_updated_on>
+        <sys_updated_on>2018-02-26 13:12:56</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>

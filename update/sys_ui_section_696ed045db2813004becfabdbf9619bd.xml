@@ -5,13 +5,27 @@
             <element>x_195647_ams_u_ams_case_id</element>
             <position>0</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2018-02-25 23:46:51</sys_created_on>
-            <sys_id>884f1c45db2813004becfabdbf96191c</sys_id>
+            <sys_created_on>2018-02-26 12:24:51</sys_created_on>
+            <sys_id>63bc0f41db6c13004becfabdbf961926</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="AMS Incident" display_value="AMS Incident" name="incident" sys_domain="global" view="Default view">696ed045db2813004becfabdbf9619bd</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2018-02-25 23:46:51</sys_updated_on>
+            <sys_updated_on>2018-02-26 12:24:51</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>x_195647_ams_cc_email_addresses</element>
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-02-26 12:24:51</sys_created_on>
+            <sys_id>e7bc0f41db6c13004becfabdbf961926</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="AMS Incident" display_value="AMS Incident" name="incident" sys_domain="global" view="Default view">696ed045db2813004becfabdbf9619bd</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-02-26 12:24:51</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
