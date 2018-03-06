@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_195647_ams_ams_accounts</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>CreateAMSAssignmentGroup</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current) {
+    gs.info("RUN - Create Assignmnet group for " + current.environment_name);
+    (function create_assignment_group() {
+        try {
+            var group = new GlideRecord('sys_user_group');
+
+            group.addQuery('name','=', 'AMS-' + current.environment_name);
+            group.query();
+            if (group.next()) {
+                gs.info("This environment already has an assignment group: " + group.sys_id );
+            } else {
+                var new_group = new GlideRecord('sys_user_group');
+                new_group.initialize(); 
+                new_group.name = 'AMS-' + current.environment_name;
+                var cola = new_group.insert();
+                gs.info(cola);
+                gs.info("Created assignment group for environment: " + new_group.name );
+            }
+
+        }
+
+        catch (ex) {
+            gs.info(ex);
+        }
+    })();
+})(current);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-03-06 15:43:45</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>0665453fdba013004becfabdbf961901</sys_id>
+        <sys_mod_count>8</sys_mod_count>
+        <sys_name>CreateAMSAssignmentGroup</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sys_script_0665453fdba013004becfabdbf961901</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-03-06 16:13:54</sys_updated_on>
+        <template/>
+        <when>async</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=0665453fdba013004becfabdbf961901"/>
+</record_update>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="AMS Accounts" max_length="40" name="x_195647_ams_ams_accounts" type="collection">
+        <element label="AWS API Key" max_length="20" name="api_key" type="string"/>
+        <element display="true" label="Environment Name" mandatory="true" max_length="255" name="environment_name" type="string"/>
+        <element label="AWS Secret Key" max_length="40" name="secret_key" type="string"/>
+    </element>
+</database>

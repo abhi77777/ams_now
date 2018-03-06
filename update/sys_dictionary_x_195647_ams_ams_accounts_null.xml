@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <record_update>
-    <sys_dictionary action="INSERT_OR_UPDATE" element="x_195647_ams_cc_email_addresses" table="incident">
+    <sys_dictionary action="INSERT_OR_UPDATE" element="" table="x_195647_ams_ams_accounts">
         <active>true</active>
         <array>false</array>
         <array_denormalized>false</array_denormalized>
@@ -15,7 +15,7 @@
         <choice/>
         <choice_field/>
         <choice_table/>
-        <column_label>cc Email Addresses one@email.com,two@email.com</column_label>
+        <column_label/>
         <comments/>
         <create_roles/>
         <default_value/>
@@ -28,13 +28,13 @@
         <dynamic_creation_script/>
         <dynamic_default_value/>
         <dynamic_ref_qual/>
-        <element>x_195647_ams_cc_email_addresses</element>
+        <element/>
         <element_reference>false</element_reference>
         <foreign_database/>
-        <internal_type display_value="String">string</internal_type>
+        <internal_type display_value="Collection">collection</internal_type>
         <mandatory>false</mandatory>
-        <max_length>255</max_length>
-        <name>incident</name>
+        <max_length>40</max_length>
+        <name>x_195647_ams_ams_accounts</name>
         <next_element/>
         <primary>false</primary>
         <read_only>false</read_only>
@@ -51,16 +51,16 @@
         <staged>false</staged>
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2018-02-26 12:23:52</sys_created_on>
-        <sys_id>b70c4741db6c13004becfabdbf9619ed</sys_id>
-        <sys_mod_count>7</sys_mod_count>
-        <sys_name>cc Email Addresses one@email.com,two@email.com</sys_name>
+        <sys_created_on>2018-03-06 15:00:40</sys_created_on>
+        <sys_id>c02df8b7dba013004becfabdbf96191c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_195647_ams_ams_accounts</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
-        <sys_update_name>sys_dictionary_incident_x_195647_ams_cc_email_addresses</sys_update_name>
+        <sys_update_name>sys_dictionary_x_195647_ams_ams_accounts_null</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-02-26 13:06:25</sys_updated_on>
+        <sys_updated_on>2018-03-06 15:00:40</sys_updated_on>
         <table_reference>false</table_reference>
         <text_index>false</text_index>
         <unique>false</unique>
