@@ -13,7 +13,7 @@
         <change_fields>false</change_fields>
         <client_callable>false</client_callable>
         <collection>x_195647_ams_ams_accounts</collection>
-        <condition/>
+        <condition>current.create_assignment_group == true</condition>
         <description/>
         <execute_function>false</execute_function>
         <filter_condition/>
@@ -32,23 +32,28 @@
     gs.info("RUN - Create Assignmnet group for " + current.environment_name);
     (function create_assignment_group() {
         try {
-            var group = new GlideRecord('sys_user_group');
-
-            group.addQuery('name','=', 'AMS-' + current.environment_name);
-            group.query();
-            if (group.next()) {
-                gs.info("This environment already has an assignment group: " + group.sys_id );
+            gs.info("current assignment group:" + current.assignment_group);
+            if (current.assignment_group != '') {
+                gs.info("This environment already has an assignment group: " + current.assignment_group );
             } else {
-                var new_group = new GlideRecord('sys_user_group');
-                new_group.initialize(); 
-                new_group.name = 'AMS-' + current.environment_name;
-                var cola = new_group.insert();
-                gs.info(cola);
-                gs.info("Created assignment group for environment: " + new_group.name );
+                var group = new GlideRecord('sys_user_group');
+                group.addQuery('name','=', 'AMS-' + current.environment_name);
+                group.query();
+                if (group.next()) {
+                    gs.info("An assignment group with the name AMS-" + current.environment_name + " exists already." );
+                } else {
+                    var new_group = new GlideRecord('sys_user_group');
+                    new_group.initialize();
+                    new_group.name = 'AMS-' + current.environment_name;
+                    new_group.insert();
+                    current.assignment_group = new_group.sys_id;
+                    current.create_assignment_group = false;
+                    current.update();
+                    gs.info("Created assignment group " + new_group.name + " for AMS environment: " + current.environment_name );
+                }
             }
 
         }
-
         catch (ex) {
             gs.info(ex);
         }
@@ -60,7 +65,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>0665453fdba013004becfabdbf961901</sys_id>
-        <sys_mod_count>9</sys_mod_count>
+        <sys_mod_count>18</sys_mod_count>
         <sys_name>CreateAMSAssignmentGroup</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -68,9 +73,9 @@
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_0665453fdba013004becfabdbf961901</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-03-06 16:26:37</sys_updated_on>
+        <sys_updated_on>2018-03-07 09:55:55</sys_updated_on>
         <template/>
-        <when>before</when>
+        <when>after</when>
     </sys_script>
     <sys_translated_text action="delete_multiple" query="documentkey=0665453fdba013004becfabdbf961901"/>
 </record_update>
