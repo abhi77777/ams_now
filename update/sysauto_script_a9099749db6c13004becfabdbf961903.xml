@@ -20,7 +20,7 @@
         ams_account.addQuery();
         ams_account.query();
         while (ams_account.next() && ams_account.active) {
-            gs.info("Polling Incidents from AMS account " + ams_account.environment_name);
+            //gs.info("Polling Incidents from AMS account " + ams_account.environment_name);
             var request = new sn_ws.RESTMessageV2();
             request.setHttpMethod('get');
             request.setEndpoint('http://54.167.195.83:3000/incidents');
@@ -41,22 +41,22 @@
             ams_cases = JSON.parse(response.getBody()).cases;
             
             for (var i = 0; i < ams_cases.length; i++) {
-                gs.info("Fetched Case ID: " + ams_cases[i]["caseId"]);
+                //gs.info("Fetched Case ID: " + ams_cases[i]["caseId"]);
                 var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
                 ams_incident.addQuery('case_id','=', ams_cases[i]["caseId"]);
                 ams_incident.query();
                 if (ams_incident.next()) {
-                    gs.info("This case is already in DB: " + ams_incident.case_id );
+                    //gs.info("This case is already in DB: " + ams_incident.case_id );
                 } else {
-                    gs.info("New AMS Case: " + ams_cases[i]["caseId"] );
+                    //gs.info("New AMS Case: " + ams_cases[i]["caseId"] );
                     // Create new Incident.
                     var new_incident = new GlideRecord('incident');
                     new_incident.initialize(); 
                     new_incident.short_description = ams_cases[i]["subject"]; 
                     new_incident.description = ams_cases[i]["recentCommunications"]["communications"][0]["body"];
                     new_incident.assignment_group = ams_account.assignment_group;
+                    //new_incident.setWorkflow(false);
                     new_incident.insert();
-                    gs.info("Created Incident from Case: " + new_incident.short_description );
                     
                     // insert in AMS Incidents table
                     var new_ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
@@ -65,7 +65,7 @@
                     new_ams_incident.ams_account = ams_account.sys_id;
                     new_ams_incident.incident = new_incident.sys_id;
                     new_ams_incident.insert();
-                    gs.info("Created new AMS Incident record: " + new_ams_incident.sys_id);
+                    gs.info("Created new AMS Incident record: " + new_ams_incident.sys_id + " linked to incident " + new_incident.short_description );
                     
                 }
             }
@@ -79,14 +79,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-02-26 13:19:07</sys_created_on>
         <sys_id>a9099749db6c13004becfabdbf961903</sys_id>
-        <sys_mod_count>47</sys_mod_count>
+        <sys_mod_count>50</sys_mod_count>
         <sys_name>PullAMSIncident</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sysauto_script_a9099749db6c13004becfabdbf961903</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-03-08 14:43:28</sys_updated_on>
+        <sys_updated_on>2018-03-08 15:18:26</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>
