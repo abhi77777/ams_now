@@ -13,7 +13,7 @@
         <change_fields>false</change_fields>
         <client_callable>false</client_callable>
         <collection>incident</collection>
-        <condition>current.assignment_group.name == "AMS"</condition>
+        <condition>current.assignment_group != ''</condition>
         <description/>
         <execute_function>false</execute_function>
         <filter_condition/>
@@ -28,47 +28,65 @@
         <rest_service_text/>
         <rest_variables/>
         <role_conditions/>
-        <script><![CDATA[(function executeRule(current) {
-    gs.info("RUN - Create AMS Case");
+        <script><![CDATA[(function executeRule(current, previous) {
+    gs.info("RUN - CreateAMSCase");
     (function create_and_link_ams_incident() {
         try {
-            if (current.x_195647_ams_u_ams_case_id == "" ) {
-                var impact = 'normal';
-                if (current.impact == 2) {
-                    impact = 'urgent';
-                } else if (current.impact == 1) {
-                    impact = 'critical';
-                }
-                var cc_addresses = String(current.x_195647_ams_cc_email_addresses).split(',');
-                var request = new sn_ws.RESTMessageV2();
-                request.setHttpMethod('post');
-                var params = {
-                  communicationBody: 'AMSTestNoOpsActionRequired - ' + current.description,
-                  subject: 'AMSTestNoOpsActionRequired - ' + current.short_description,
-                  categoryCode: 'other',
-                  serviceCode: 'sentinel-report-incident',
-                  severityCode: impact
-                };
-                //}
-                // why wont this work?
-                //request.setRequestBody(body);
-                //gs.info(request.getRequestBody());
-                gs.info("RUN - set endpoint");
-                request.setEndpoint('http://91b21d7e3a00801579d29e080c0eb96b7599571e:a8e4d35634a2471e7b03348567abf727231c1e44@54.167.195.83:3000/incidents');
-                request.setEndpoint('http://54.167.195.83:3000/incidents');
-                request.setQueryParameter('params', JSON.stringify(params));
-                gs.info("RUN - execute");
-                var response = request.execute();
-                ams_case_id = JSON.parse(response.getBody()).caseId;
-                gs.info("Created AMS Case ID: " + ams_case_id);
-                
-                current.x_195647_ams_u_ams_case_id = ams_case_id;
-                current.update();
+            var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
+            ams_incident.addQuery('incident','=', current.sys_id);
+            ams_incident.query();
+            if (ams_incident.next()) {
+                gs.info("Incident exists :" + ams_incident.case_id);
             } else {
-                gs.info("Incident linked already :" + current.x_195647_ams_u_ams_case_id);
+                var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
+                ams_account.addQuery('assignment_group','=', current.assignment_group.sys_id);
+                ams_account.query();
+                if (ams_account.next()) {
+                    gs.info("Found an AMS account for the " + current.assignment_group.name + " assignment group: " + ams_account.environment_name);
+                    var impact = 'normal';
+                    if (current.impact == 2) {
+                        impact = 'urgent';
+                    } else if (current.impact == 1) {
+                        impact = 'critical';
+                    }
+                    var request = new sn_ws.RESTMessageV2();
+                    request.setEndpoint('http://54.167.195.83:3000/incidents');
+                    var credentials = { 
+                        accessKeyId: String(ams_account.api_key),
+                        secretAccessKey: String(ams_account.secret_key)
+                    };
+                    request.setQueryParameter('credentials', JSON.stringify(credentials));
+                    request.setHttpMethod('post');
+                    var params = {
+                      communicationBody: 'AMSTestNoOpsActionRequired - ' + current.description,
+                      subject: 'AMSTestNoOpsActionRequired - ' + current.short_description,
+                      categoryCode: 'other',
+                      serviceCode: 'sentinel-report-incident',
+                      severityCode: impact
+                    };
+                    request.setQueryParameter('params', JSON.stringify(params));
+                    
+                    //}
+                    // why wont this work?
+                    //request.setRequestBody(body);
+                    //gs.info(request.getRequestBody());
+                    var response = request.execute();
+                    var ams_case_id = JSON.parse(response.getBody()).caseId;
+                    gs.info("Created AMS Case ID: " + ams_case_id);
+                    
+                    // insert in AMS Incidents table
+                    var new_ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
+                    new_ams_incident.initialize();
+                    new_ams_incident.case_id = ams_case_id;
+                    new_ams_incident.ams_account = ams_account.sys_id;
+                    new_ams_incident.incident = current.sys_id;
+                    new_ams_incident.insert();
+                    gs.info("Created new AMS Incident record: " + new_ams_incident.sys_id);
+                } else {
+                    gs.error("Assignment group is not realted to an AMS account");
+                }
             }
         }
-
         catch (ex) {
             gs.info(ex);
         }
@@ -80,7 +98,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>7fb7d674db2413004becfabdbf96195b</sys_id>
-        <sys_mod_count>63</sys_mod_count>
+        <sys_mod_count>80</sys_mod_count>
         <sys_name>CreateAMSIncident</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -88,7 +106,7 @@
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_7fb7d674db2413004becfabdbf96195b</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-03-06 15:33:36</sys_updated_on>
+        <sys_updated_on>2018-03-08 12:47:09</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>

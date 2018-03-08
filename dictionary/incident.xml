@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<database>
-    <element attributes="email_client=true,query_hints=true,hasWorkflow=true,live_feed=true" audit="true" extends="task" label="Incident" max_length="40" name="incident" sizeclass="78" text_index="true" type="collection">
-        <element attributes="edge_encryption_enabled=true" label="AMS Case Id" max_length="255" name="x_195647_ams_u_ams_case_id" read_only="true" type="string"/>
-    </element>
-</database>

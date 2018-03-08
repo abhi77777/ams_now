@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <record_update>
-    <sys_dictionary action="INSERT_OR_UPDATE" element="api_key" table="x_195647_ams_ams_accounts">
+    <sys_dictionary action="INSERT_OR_UPDATE" element="case_id" table="x_195647_ams_ams_incidents">
         <active>true</active>
         <array>false</array>
         <array_denormalized>false</array_denormalized>
@@ -15,7 +15,7 @@
         <choice/>
         <choice_field/>
         <choice_table/>
-        <column_label>AWS API key</column_label>
+        <column_label>Case ID</column_label>
         <comments/>
         <create_roles/>
         <default_value/>
@@ -28,13 +28,13 @@
         <dynamic_creation_script/>
         <dynamic_default_value/>
         <dynamic_ref_qual/>
-        <element>api_key</element>
+        <element>case_id</element>
         <element_reference>false</element_reference>
         <foreign_database/>
         <internal_type display_value="String">string</internal_type>
         <mandatory>true</mandatory>
-        <max_length>20</max_length>
-        <name>x_195647_ams_ams_accounts</name>
+        <max_length>255</max_length>
+        <name>x_195647_ams_ams_incidents</name>
         <next_element/>
         <primary>false</primary>
         <read_only>false</read_only>
@@ -51,16 +51,16 @@
         <staged>false</staged>
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2018-03-06 15:07:42</sys_created_on>
-        <sys_id>a5931537dbe013004becfabdbf961989</sys_id>
-        <sys_mod_count>2</sys_mod_count>
-        <sys_name>AWS API key</sys_name>
+        <sys_created_on>2018-03-08 10:20:15</sys_created_on>
+        <sys_id>9fdfc298db3013004becfabdbf961947</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Case ID</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
-        <sys_update_name>sys_dictionary_x_195647_ams_ams_accounts_api_key</sys_update_name>
+        <sys_update_name>sys_dictionary_x_195647_ams_ams_incidents_case_id</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-03-08 09:49:26</sys_updated_on>
+        <sys_updated_on>2018-03-08 10:20:15</sys_updated_on>
         <table_reference>false</table_reference>
         <text_index>false</text_index>
         <unique>false</unique>

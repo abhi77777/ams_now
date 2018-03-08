@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <record_update table="sysauto_script">
     <sysauto_script action="INSERT_OR_UPDATE">
-        <active>true</active>
+        <active>false</active>
         <condition/>
         <conditional>false</conditional>
         <name>PullAMSIncident</name>
@@ -14,56 +14,79 @@
         <run_time>1970-01-01 08:02:00</run_time>
         <run_type>periodically</run_type>
         <script><![CDATA[(function poll_ams_incidents_and_create_new() {
-    var request = new sn_ws.RESTMessageV2();
-    request.setHttpMethod('get');
-    var params = JSON.stringify({
-      includeCommunications: true,
-      maxResults: 10
-    });
-    request.setEndpoint('http://91b21d7e3a00801579d29e080c0eb96b7599571e:a8e4d35634a2471e7b03348567abf727231c1e44@54.167.195.83:3000/incidents');
-	//request.setEndpoint('http://54.167.195.83:3000/incidents');
-    request.setQueryParameter('params', params);
+    gs.info("RUN - PullAMSCases");
+    try {
+        var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
+        ams_account.addQuery();
+        ams_account.query();
+        while (ams_account.next() && ams_account.active) {
+            gs.info("Polling Incidents from AMS account " + ams_account.environment_name);
+            var request = new sn_ws.RESTMessageV2();
+            request.setHttpMethod('get');
+            request.setEndpoint('http://54.167.195.83:3000/incidents');
+            
+            var params = JSON.stringify({
+              includeCommunications: true,
+              maxResults: 10
+            });
 
-    var response = request.execute();
-    ams_cases = JSON.parse(response.getBody()).cases;
-    casesLength = ams_cases.length;
-    for (var i = 0; i < casesLength; i++) {
-        gs.info("Fetched Case ID: " + ams_cases[i]["caseId"]);
-        var incident = new GlideRecord('incident');
-        incident.addQuery('x_195647_ams_u_ams_case_id','=', ams_cases[i]["caseId"]);
-        incident.query();
-        if (incident.next()) {
-            gs.info("This case is already in DB: " + incident.x_195647_ams_u_ams_case_id );
-        } else {
-            gs.info("New AMS Case: " + ams_cases[i]["caseId"] );
-            var new_incident = new GlideRecord('incident');
-            new_incident.initialize(); 
-            new_incident.short_description = ams_cases[i]["subject"]; 
-            new_incident.description = ams_cases[i]["recentCommunications"]["communications"][0]["body"];
-            new_incident.x_195647_ams_u_ams_case_id = ams_cases[i]["caseId"];
-            var ams_resolver_group = new GlideRecord('sys_user_group');
-            ams_resolver_group.addQuery('name','=', 'AMS');
-            ams_resolver_group.query();
-            ams_resolver_group.next();
-            gs.info("Found assignment group for AMS Case: " + ams_resolver_group.sys_id );
-            new_incident.assignment_group = ams_resolver_group.sys_id;
-            new_incident.insert();
-            gs.info("Created Incident from Case: " + new_incident.short_description );
+            request.setQueryParameter('params', params);
+            var credentials = { 
+                "accessKeyId": String(ams_account.api_key),
+                "secretAccessKey": String(ams_account.secret_key)
+            };
+            request.setQueryParameter('credentials', JSON.stringify(credentials));
+
+            var response = request.execute();
+            ams_cases = JSON.parse(response.getBody()).cases;
+            
+            for (var i = 0; i < ams_cases.length; i++) {
+                gs.info("Fetched Case ID: " + ams_cases[i]["caseId"]);
+                var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
+                ams_incident.addQuery('case_id','=', ams_cases[i]["caseId"]);
+                ams_incident.query();
+                if (ams_incident.next()) {
+                    gs.info("This case is already in DB: " + ams_incident.case_id );
+                } else {
+                    gs.info("New AMS Case: " + ams_cases[i]["caseId"] );
+                    // Create new Incident.
+                    var new_incident = new GlideRecord('incident');
+                    new_incident.initialize(); 
+                    new_incident.short_description = ams_cases[i]["subject"]; 
+                    new_incident.description = ams_cases[i]["recentCommunications"]["communications"][0]["body"];
+                    new_incident.assignment_group = ams_account.assignment_group;
+                    new_incident.insert();
+                    gs.info("Created Incident from Case: " + new_incident.short_description );
+                    
+                    // insert in AMS Incidents table
+                    var new_ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
+                    new_ams_incident.initialize();
+                    new_ams_incident.case_id = ams_cases[i]["caseId"];
+                    new_ams_incident.ams_account = ams_account.sys_id;
+                    new_ams_incident.incident = new_incident.sys_id;
+                    new_ams_incident.insert();
+                    gs.info("Created new AMS Incident record: " + new_ams_incident.sys_id);
+                    
+                }
+            }
         }
+    }
+    catch (ex) {
+        gs.info(ex);
     }
 })();]]></script>
         <sys_class_name>sysauto_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-02-26 13:19:07</sys_created_on>
         <sys_id>a9099749db6c13004becfabdbf961903</sys_id>
-        <sys_mod_count>33</sys_mod_count>
+        <sys_mod_count>46</sys_mod_count>
         <sys_name>PullAMSIncident</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sysauto_script_a9099749db6c13004becfabdbf961903</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-02-26 16:41:46</sys_updated_on>
+        <sys_updated_on>2018-03-08 12:31:36</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>
