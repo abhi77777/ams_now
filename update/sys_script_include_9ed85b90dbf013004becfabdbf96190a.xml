@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_195647_ams.AMSIncidentAPI</api_name>
+        <client_callable>false</client_callable>
+        <description>Wrapper around AMS Incidents for simple Creat, Read, Update &amp; List ops.</description>
+        <name>AMSIncidentAPI</name>
+        <script><![CDATA[gs.include('AWSSignUtil');
+var AMSIncidentAPI = Class.create();
+
+AMSIncidentAPI.prototype = {
+    
+    initialize: function(creds) {
+        this.creds    = creds;
+        this.endpoint = 'https://support.us-east-1.amazonaws.com/';
+        this.req_opts = {
+            service : 'support', // 'AWSSupport_20130415.',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-amz-json-1.1',
+                'X-Amz-Target': 'AWSSupport_20130415.',
+                'User-Agent'  : ''
+            }
+        };
+    },
+
+    listCases: function(params) {
+        /*{
+            "caseIdList": [
+                ""
+            ], 
+            "displayId": "", 
+            "afterTime": "", 
+            "beforeTime": "", 
+            "includeResolvedCases": true, 
+            "nextToken": "", 
+            "language": "", 
+            "includeCommunications": true,
+            "maxResults":10
+        }*/
+        var defaults =  {
+            "includeResolvedCases": false, 
+            "includeCommunications": false,
+            "maxResults":10
+        };
+        this.req_opts.body = JSON.stringify(this._extend(defaults, params));
+        var request = this._build_request(this.req_opts, 'DescribeCases');
+        response = request.execute();
+        if (response.haveError()) {
+            gs.error(response.getErrorMessage());
+        } else {
+            return JSON.parse(response.getBody()).cases;
+        }
+    },
+    // It uses displayId instead of caseId as AMS ops use this value as ID.
+    getCase: function(displayId) {
+        var params = {
+            "displayId": displayId,
+            "includeCommunications": true
+        };
+        this.req_opts.body = JSON.stringify(params);
+        var request = this._build_request(this.req_opts, 'DescribeCases');
+        response = request.execute();
+        if (response.haveError()) {
+            gs.error(response.getErrorMessage());
+        } else {
+            return JSON.parse(response.getBody()).cases[0];
+        }
+    },
+    createCase: function (params) {
+        /*{
+            "subject": "", 
+            "serviceCode": "", 
+            "severityCode": "", 
+            "categoryCode": "", 
+            "communicationBody": "", 
+            "ccEmailAddresses": [
+                ""
+            ], 
+            "language": "", 
+            "issueType": "", 
+            "attachmentSetId": ""
+        }*/
+        var defaults =  {
+            "serviceCode": 'sentinel-report-incident', 
+            "categoryCode": "other"
+        };
+        this.req_opts.body = JSON.stringify(this._extend(defaults, params));
+        var request = this._build_request(this.req_opts, 'CreateCase');
+        response = request.execute();
+        if (response.haveError()) {
+            gs.error(response.getErrorMessage());
+        } else {
+            return JSON.parse(response.getBody()).caseId;
+        }
+    },
+
+    updateCase: function (params) {
+        // body...
+    },
+
+    _build_request: function(opts, action) {
+        opts.headers['X-Amz-Target']+= action;
+        var signature = AWSSignUtil.sign(opts, this.creds);
+        var request = new sn_ws.RESTMessageV2();
+        request.setHttpMethod(opts.method);
+        request.setEndpoint(this.endpoint);
+        request.setRequestHeader('Content-Type', opts.headers['Content-Type']);
+        request.setRequestHeader('X-Amz-Target', opts.headers['X-Amz-Target']);
+        request.setRequestHeader('Authorization', signature.headers.Authorization);
+        request.setRequestHeader('X-Amz-Date', signature.headers['X-Amz-Date']);
+        request.setRequestHeader('User-Agent', signature.headers['User-Agent']);
+        request.setRequestBody(opts.body);
+        return request;
+    },
+
+    _extend: function extend(obj, src) {
+        for (var key in src) {
+            if (src.hasOwnProperty(key)) obj[key] = src[key];
+        }
+        return obj;
+    },
+
+
+    type: 'AMSIncidentAPI'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-03-08 15:39:12</sys_created_on>
+        <sys_id>9ed85b90dbf013004becfabdbf96190a</sys_id>
+        <sys_mod_count>44</sys_mod_count>
+        <sys_name>AMSIncidentAPI</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sys_script_include_9ed85b90dbf013004becfabdbf96190a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-03-10 19:36:16</sys_updated_on>
+    </sys_script_include>
+</record_update>
