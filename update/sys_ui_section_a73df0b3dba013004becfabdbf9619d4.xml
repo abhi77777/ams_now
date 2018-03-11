@@ -5,97 +5,97 @@
             <element>environment_name</element>
             <position>0</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2018-03-07 09:26:47</sys_created_on>
-            <sys_id>3a4a30c0db3013004becfabdbf9619eb</sys_id>
+            <sys_created_on>2018-03-11 15:02:58</sys_created_on>
+            <sys_id>2a9d2299db7c53004becfabdbf9619ce</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2018-03-07 09:26:47</sys_updated_on>
-            <sys_user/>
-            <type/>
-        </sys_ui_element>
-        <sys_ui_element action="INSERT_OR_UPDATE">
-            <element>api_key</element>
-            <position>1</position>
-            <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2018-03-07 09:26:47</sys_created_on>
-            <sys_id>fe4a30c0db3013004becfabdbf9619eb</sys_id>
-            <sys_mod_count>0</sys_mod_count>
-            <sys_ui_formatter/>
-            <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
-            <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2018-03-07 09:26:47</sys_updated_on>
-            <sys_user/>
-            <type/>
-        </sys_ui_element>
-        <sys_ui_element action="INSERT_OR_UPDATE">
-            <element>secret_key</element>
-            <position>2</position>
-            <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2018-03-07 09:26:47</sys_created_on>
-            <sys_id>724a30c0db3013004becfabdbf9619ec</sys_id>
-            <sys_mod_count>0</sys_mod_count>
-            <sys_ui_formatter/>
-            <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
-            <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2018-03-07 09:26:47</sys_updated_on>
-            <sys_user/>
-            <type/>
-        </sys_ui_element>
-        <sys_ui_element action="INSERT_OR_UPDATE">
-            <element>assignment_group</element>
-            <position>3</position>
-            <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2018-03-07 09:26:47</sys_created_on>
-            <sys_id>f24a30c0db3013004becfabdbf9619ec</sys_id>
-            <sys_mod_count>0</sys_mod_count>
-            <sys_ui_formatter/>
-            <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
-            <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2018-03-07 09:26:47</sys_updated_on>
-            <sys_user/>
-            <type/>
-        </sys_ui_element>
-        <sys_ui_element action="INSERT_OR_UPDATE">
-            <element>create_assignment_group</element>
-            <position>4</position>
-            <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2018-03-07 09:26:47</sys_created_on>
-            <sys_id>764a30c0db3013004becfabdbf9619ec</sys_id>
-            <sys_mod_count>0</sys_mod_count>
-            <sys_ui_formatter/>
-            <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
-            <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2018-03-07 09:26:47</sys_updated_on>
+            <sys_updated_on>2018-03-11 15:02:58</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
         <sys_ui_element action="INSERT_OR_UPDATE">
             <element>active</element>
-            <position>5</position>
+            <position>1</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2018-03-08 09:37:10</sys_created_on>
-            <sys_id>f8468e14db3013004becfabdbf961995</sys_id>
+            <sys_created_on>2018-03-11 15:02:58</sys_created_on>
+            <sys_id>aa9d2299db7c53004becfabdbf9619ce</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2018-03-08 09:37:10</sys_updated_on>
+            <sys_updated_on>2018-03-11 15:02:58</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>api_key</element>
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-03-11 15:02:58</sys_created_on>
+            <sys_id>2e9d2299db7c53004becfabdbf9619ce</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-03-11 15:02:58</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>secret_key</element>
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-03-11 15:02:58</sys_created_on>
+            <sys_id>ae9d2299db7c53004becfabdbf9619ce</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-03-11 15:02:58</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>assignment_group</element>
+            <position>4</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-03-11 15:02:58</sys_created_on>
+            <sys_id>229d2299db7c53004becfabdbf9619cf</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-03-11 15:02:58</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
         <sys_ui_element action="INSERT_OR_UPDATE">
             <element>assignment_user</element>
-            <position>6</position>
+            <position>5</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2018-03-11 13:03:18</sys_created_on>
-            <sys_id>6932525ddb3c53004becfabdbf961973</sys_id>
+            <sys_created_on>2018-03-11 15:02:58</sys_created_on>
+            <sys_id>a29d2299db7c53004becfabdbf9619cf</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2018-03-11 13:03:18</sys_updated_on>
+            <sys_updated_on>2018-03-11 15:02:58</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>auto_setup</element>
+            <position>6</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2018-03-11 15:02:58</sys_created_on>
+            <sys_id>269d2299db7c53004becfabdbf9619cf</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_accounts" sys_domain="global" view="Default view">a73df0b3dba013004becfabdbf9619d4</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2018-03-11 15:02:58</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
