@@ -19,7 +19,7 @@
         <filter_condition/>
         <is_rest>false</is_rest>
         <message/>
-        <name>CreateAMSIncident</name>
+        <name>PushAMSIncident</name>
         <order>100</order>
         <priority>100</priority>
         <rest_method/>
@@ -29,64 +29,93 @@
         <rest_variables/>
         <role_conditions/>
         <script><![CDATA[gs.include('AMSIncidentAPI');
+
+function mapSeverity(impact) {
+    var severityCode;
+    switch(impact) {
+        case 2:
+            severityCode = 'urgent';
+            break;
+        case 3:
+            severityCode = 'critical';
+            break;
+        default:
+            severityCode = 'normal';
+    }
+    return severityCode;
+}
+
+function createAMSCase(incident, ams_account) {
+    var creds = {
+        accessKeyId: String(ams_account.api_key),
+        secretAccessKey: String(ams_account.secret_key)
+    };
+
+    var params = {
+      communicationBody: 'AMSTestNoOpsActionRequired - ' + incident.description,
+      subject: 'AMSTestNoOpsActionRequired - ' + incident.short_description,
+      categoryCode: 'other',
+      serviceCode: 'sentinel-report-incident'
+    };
+    
+    params.severityCode = mapSeverity(current.impact);
+
+    AMSApi = new AMSIncidentAPI(creds);
+    var ams_case_id = AMSApi.createCase(params);
+    //gs.info("Created AMS Case ID: " + ams_case_id);
+    
+    // insert in AMS Incidents table
+    var new_ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
+    new_ams_incident.initialize();
+    new_ams_incident.case_id = ams_case_id;
+    new_ams_incident.ams_account = ams_account.sys_id;
+    new_ams_incident.incident = current.sys_id;
+    new_ams_incident.insert();
+    return new_ams_incident;
+}
+
+function resolveAMSCase(caseId, ams_account) {
+    var creds = {
+        accessKeyId: String(ams_account.api_key),
+        secretAccessKey: String(ams_account.secret_key)
+    };
+
+    AMSApi = new AMSIncidentAPI(creds);
+    var result = AMSApi.resolveCase(caseId);
+
+    // update AMS Incidents table
+    var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
+    ams_incident.addQuery('case_id','=', caseId);
+    ams_incident.query();
+    if (ams_incident.next()) {
+        ams_incident.status = 'resolved';
+        ams_incident.update();
+    }
+    return result;
+}
+
+
 (function executeRule(current, previous) {
     
-    (function create_and_link_ams_incident() {
+    (function push_ams_incident() {
         try {
-            var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
-            ams_incident.addQuery('incident','=', current.sys_id);
-            ams_incident.query();
-            if (ams_incident.next()) {
-                gs.info("Incident exists :" + ams_incident.case_id);
-            } else {
-                var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
-                ams_account.addQuery('assignment_group','=', current.assignment_group.sys_id);
-                ams_account.query();
-                if (ams_account.next() && ams_account.active) {
-					gs.info("RUN - CreateAMSCase " + current.number);
-                    //gs.info("Found an AMS account for the " + current.assignment_group.name + " assignment group: " + ams_account.environment_name);
-
-                    var creds = {
-                        accessKeyId: String(ams_account.api_key),
-                        secretAccessKey: String(ams_account.secret_key)
-                    };
-
-                    var params = {
-                      communicationBody: 'AMSTestNoOpsActionRequired - ' + current.description,
-                      subject: 'AMSTestNoOpsActionRequired - ' + current.short_description,
-                      categoryCode: 'other',
-                      serviceCode: 'sentinel-report-incident'
-                    };
-                    
-                    switch(current.impact) {
-                        case 2:
-                            params.severityCode = 'urgent';
-                            break;
-                        case 3:
-                            params.severityCode = 'critical';
-                            break;
-                        default:
-                            params.severityCode = 'normal';
+            gs.info("PushAMSIncident"+current.name);
+            var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
+            ams_account.addQuery('assignment_group','=', current.assignment_group.sys_id);
+            ams_account.query();
+            if (ams_account.next() && ams_account.active) {
+                var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
+                ams_incident.addQuery('incident','=', current.sys_id);
+                ams_incident.query();
+                if (ams_incident.next()) {
+                    if (current.incident_state > 5) {
+                        var result = resolveAMSCase(ams_incident.case_id, ams_account);
                     }
-                    
-                    AMSApi = new AMSIncidentAPI(creds);
-                    
-                    // THIS IS VULNERABLE TO A RACE CONDITION WITH THE POLLER while the case exists and the record is created
-                    // i should either bolck the table or block the poller.
-                    var ams_case_id = AMSApi.createCase(params);
-                    gs.info("Created AMS Case ID: " + ams_case_id);
-                    
-                    // insert in AMS Incidents table
-                    var new_ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
-                    new_ams_incident.initialize();
-                    new_ams_incident.case_id = ams_case_id;
-                    new_ams_incident.ams_account = ams_account.sys_id;
-                    new_ams_incident.incident = current.sys_id;
-                    new_ams_incident.insert();
-                    gs.info("Created new AMS Incident record: " + new_ams_incident.sys_id);
                 } else {
-                    gs.info("No active AMS account exists for this resolver group.");
+                    var new_ams_incident = createAMSCase(current, ams_account);
                 }
+            } else {
+                gs.info("No active AMS account exists for this resolver group.");
             }
         }
         catch (ex) {
@@ -100,15 +129,15 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>7fb7d674db2413004becfabdbf96195b</sys_id>
-        <sys_mod_count>90</sys_mod_count>
-        <sys_name>CreateAMSIncident</sys_name>
+        <sys_mod_count>100</sys_mod_count>
+        <sys_name>PushAMSIncident</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_7fb7d674db2413004becfabdbf96195b</sys_update_name>
-        <sys_updated_by>ams</sys_updated_by>
-        <sys_updated_on>2018-03-14 00:09:56</sys_updated_on>
+        <sys_updated_by>abel.tuter</sys_updated_by>
+        <sys_updated_on>2018-03-14 03:52:32</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>
