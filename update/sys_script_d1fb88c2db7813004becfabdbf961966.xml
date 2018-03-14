@@ -28,16 +28,18 @@
         <rest_service_text/>
         <rest_variables/>
         <role_conditions/>
-        <script><![CDATA[gs.include('AMSIncidentAPI');
+        <script><![CDATA[//gs.info("RUN - PushIncidentComments "+current.value);
+gs.include('AMSIncidentAPI');
 (function executeRule(current, previous) {
     (function pushIncidentComments() {
+		
         try {
             var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
             ams_incident.addQuery('incident','=', current.element_id);
             ams_incident.query();
             if (ams_incident.next() && ams_incident.ams_account.active) {
                 if (current.element == 'comments' && current.sys_created_by != 'admin') {
-					gs.info("RUN - PushIncidentComments "+current.value);
+					
                     var creds = {
                         accessKeyId: String(ams_incident.ams_account.api_key),
                         secretAccessKey: String(ams_incident.ams_account.secret_key)
@@ -64,15 +66,15 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>d1fb88c2db7813004becfabdbf961966</sys_id>
-        <sys_mod_count>21</sys_mod_count>
+        <sys_mod_count>28</sys_mod_count>
         <sys_name>PushIncidentComments</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_d1fb88c2db7813004becfabdbf961966</sys_update_name>
-        <sys_updated_by>ams</sys_updated_by>
-        <sys_updated_on>2018-03-14 00:08:26</sys_updated_on>
+        <sys_updated_by>abel.tuter</sys_updated_by>
+        <sys_updated_on>2018-03-14 02:35:18</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>
