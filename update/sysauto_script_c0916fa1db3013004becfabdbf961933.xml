@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <record_update table="sysauto_script">
     <sysauto_script action="INSERT_OR_UPDATE">
-        <active>false</active>
+        <active>true</active>
         <condition/>
         <conditional>false</conditional>
-        <name>PullAMSIncident</name>
+        <name>AMSIncidentPoller</name>
         <run_as display_value="System Administrator">6816f79cc0a8016401c5a33be04be441</run_as>
         <run_as_tz/>
         <run_dayofmonth>1</run_dayofmonth>
         <run_dayofweek>1</run_dayofweek>
         <run_period>1970-01-01 00:00:10</run_period>
-        <run_start>2018-02-26 13:18:31</run_start>
-        <run_time>1970-01-01 08:02:00</run_time>
+        <run_start>2018-03-12 13:28:28</run_start>
+        <run_time>1970-01-01 08:00:00</run_time>
         <run_type>periodically</run_type>
-        <script><![CDATA[gs.include('AMSIncidentAPI');
-(function pull_ams_incidents_and_create_new() {
-    gs.info("RUN - PullAMSCases");
+        <script><![CDATA[function getLastCommentTimeByUser(incident_id, user_name) {
+    var timestamp;
+    var activity = new GlideRecord('sys_journal_field');
+    activity.addQuery('element_id','=', String(incident_id));
+    activity.addQuery('element','=', "comments");
+    activity.addQuery('sys_created_by','=', user_name);
+    activity.orderByDesc('sys_created_on');
+    activity.setLimit(1);
+    activity.query();
+    if (activity.next()) {
+        timestamp = activity.sys_created_on;
+        gs.info("COMMENT "+String(activity.value));
+    } else {
+        timestamp = new GlideDateTime();
+        timestamp.setValue(0);
+    }
+    gs.info("TIME "+String(timestamp));
+    return String(timestamp).replace(" ", "T");
+}
+
+gs.include('AMSIncidentAPI');
+(function AMSIncidentPoller() {
+    gs.info("RUN - AMSIncidentPoller");
     try {
         var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
         ams_account.addQuery();
@@ -36,18 +56,43 @@
                 var ams_cases = AMSApi.listCases(params);
                 
                 for (var i = 0; i < ams_cases.length; i++) {
-                    gs.info("Fetched Case ID: " + ams_cases[i]["caseId"]);
+                    //gs.info("Fetched Case ID: " + ams_cases[i]["caseId"]);
                     var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
-                    ams_incident.addQuery('case_id','=', ams_cases[i]["caseId"]);
+                    ams_incident.addQuery('case_id','=', ams_cases[i]["caseId"]); //add close filter
                     ams_incident.query();
+
                     if (ams_incident.next()) {
-                        gs.info("This case is already in DB: " + ams_incident.case_id );
+
+                        last_comment_time = getLastCommentTimeByUser(ams_incident.incident, 'admin');
+                        //gs.info("LA ultima Fecha "+last_comment_time);
+                        
+                        // check last local update.
+                        params = {
+                            afterTime: last_comment_time,
+                            caseId: String(ams_incident.case_id)
+                        };
+                        var comms = AMSApi.getCaseCommunications(params);
+                        var snow_user =  new RegExp(ams_account.iam_user_name);
+
+                        comms.forEach(function(c) {
+                            if (c.submittedBy.match(snow_user)) { return }
+                            gs.info("FETCH COMMENT"+c.body);
+                            var incident = ams_incident.incident.getRefRecord();
+                            incident.autoSysFields(false);
+                            incident.comments = c.body;
+                            incident.sys_updated_on = c.timeCreated.substring(0,(c.timeCreated.length-5)).replace("T", " ");
+                            incident.sys_updated_by = ams_account.assignment_user.user_name;
+                            incident.update();
+                        });
+
+                        //incident.addQuery('sys_id','=', ams_incident.incident); //add close filter
+
                     } else {
-                        gs.info("New AMS Case: " + ams_cases[i]["caseId"] );
-                        // Create new Incident.
+                        //gs.info("New AMS Case: " + ams_cases[i]["caseId"] );
+                        // Create new Incident without comms.
                         var new_incident = new GlideRecord('incident');
                         new_incident.initialize(); 
-                        new_incident.short_description = ams_cases[i]["subject"]; 
+                        new_incident.short_description = ams_cases[i]["subject"];
                         new_incident.description = ams_cases[i]["recentCommunications"]["communications"][0]["body"];
                         new_incident.assignment_group = ams_account.assignment_group;
                         new_incident.caller_id = ams_account.assignment_user;
@@ -78,16 +123,16 @@
 })();]]></script>
         <sys_class_name>sysauto_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2018-02-26 13:19:07</sys_created_on>
-        <sys_id>a9099749db6c13004becfabdbf961903</sys_id>
-        <sys_mod_count>56</sys_mod_count>
-        <sys_name>PullAMSIncident</sys_name>
+        <sys_created_on>2018-03-12 13:28:51</sys_created_on>
+        <sys_id>c0916fa1db3013004becfabdbf961933</sys_id>
+        <sys_mod_count>156</sys_mod_count>
+        <sys_name>AMSIncidentPoller</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
-        <sys_update_name>sysauto_script_a9099749db6c13004becfabdbf961903</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-03-12 10:51:03</sys_updated_on>
+        <sys_update_name>sysauto_script_c0916fa1db3013004becfabdbf961933</sys_update_name>
+        <sys_updated_by>abel.tuter</sys_updated_by>
+        <sys_updated_on>2018-03-14 01:40:43</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>

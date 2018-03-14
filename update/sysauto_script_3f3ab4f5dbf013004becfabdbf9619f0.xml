@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sysauto_script">
+    <sysauto_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition/>
+        <conditional>false</conditional>
+        <name>TestChota</name>
+        <run_as display_value="System Administrator">6816f79cc0a8016401c5a33be04be441</run_as>
+        <run_as_tz/>
+        <run_dayofmonth>1</run_dayofmonth>
+        <run_dayofweek>1</run_dayofweek>
+        <run_period/>
+        <run_start>2018-03-12 19:55:56</run_start>
+        <run_time>1970-01-01 08:00:00</run_time>
+        <run_type>on_demand</run_type>
+        <script><![CDATA[gs.include('AMSIncidentAPI');
+(function() {
+    gs.info("RUN - TestChota");
+    try {
+        var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
+        ams_account.addQuery();
+        ams_account.query();
+        while (ams_account.next()) {
+            if (ams_account.active) {
+                var creds = {
+                    accessKeyId: String(ams_account.api_key),
+                    secretAccessKey: String(ams_account.secret_key)
+                };
+                AMSApi = new AMSIncidentAPI(creds);
+				var params = {
+                        caseId: 'case-364168241140-muen-2018-632a5f8a80c1a164',
+                        communicationBody: 'Yee-haw! Giddyup, partner! ...'
+                    };    
+                var resp = AMSApi.addCaseCommunications(params);
+                //var resp = AMSApi.getCaseCommunications({afterTime: "2018-03-12T10:49:50", caseId:"case-364168241140-muen-2018-45c5889acd9295dc"}); //('4918646331');
+                gs.info("CASES: " + JSON.stringify(resp));
+            }
+        }
+    }
+    catch (ex) {
+        gs.info(ex);
+    }
+})();]]></script>
+        <sys_class_name>sysauto_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-03-12 19:56:08</sys_created_on>
+        <sys_id>3f3ab4f5dbf013004becfabdbf9619f0</sys_id>
+        <sys_mod_count>16</sys_mod_count>
+        <sys_name>TestChota</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sysauto_script_3f3ab4f5dbf013004becfabdbf9619f0</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-03-13 11:57:16</sys_updated_on>
+        <upgrade_safe>false</upgrade_safe>
+    </sysauto_script>
+</record_update>
