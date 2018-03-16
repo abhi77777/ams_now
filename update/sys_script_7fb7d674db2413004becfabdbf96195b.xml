@@ -74,7 +74,7 @@ function createAMSCase(incident, ams_account) {
     return new_ams_incident;
 }
 
-function resolveAMSCase(caseId, ams_account) {
+function closeAMSCase(caseId, ams_account) {
     var creds = {
         accessKeyId: String(ams_account.api_key),
         secretAccessKey: String(ams_account.secret_key)
@@ -99,7 +99,7 @@ function resolveAMSCase(caseId, ams_account) {
     
     (function push_ams_incident() {
         try {
-            gs.info("PushAMSIncident"+current.name);
+            gs.info("PushAMSIncident"+current.number+' status '+current.incident_state);
             var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
             ams_account.addQuery('assignment_group','=', current.assignment_group.sys_id);
             ams_account.query();
@@ -109,7 +109,7 @@ function resolveAMSCase(caseId, ams_account) {
                 ams_incident.query();
                 if (ams_incident.next()) {
                     if (current.incident_state > 5) {
-                        var result = resolveAMSCase(ams_incident.case_id, ams_account);
+                        var result = closeAMSCase(ams_incident.case_id, ams_account);
                     }
                 } else {
                     var new_ams_incident = createAMSCase(current, ams_account);
@@ -129,7 +129,7 @@ function resolveAMSCase(caseId, ams_account) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>7fb7d674db2413004becfabdbf96195b</sys_id>
-        <sys_mod_count>100</sys_mod_count>
+        <sys_mod_count>102</sys_mod_count>
         <sys_name>PushAMSIncident</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -137,7 +137,7 @@ function resolveAMSCase(caseId, ams_account) {
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_7fb7d674db2413004becfabdbf96195b</sys_update_name>
         <sys_updated_by>abel.tuter</sys_updated_by>
-        <sys_updated_on>2018-03-14 03:52:32</sys_updated_on>
+        <sys_updated_on>2018-03-16 14:34:50</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>
