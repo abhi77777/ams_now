@@ -13,7 +13,7 @@
         <change_fields>false</change_fields>
         <client_callable>false</client_callable>
         <collection>incident</collection>
-        <condition>current.assignment_group != ''</condition>
+        <condition/>
         <description/>
         <execute_function>false</execute_function>
         <filter_condition/>
@@ -96,30 +96,27 @@ function closeAMSCase(caseId, ams_account) {
 
 
 (function executeRule(current, previous) {
-    
     (function push_ams_incident() {
-        try {
-            gs.info("PushAMSIncident"+current.number+' status '+current.incident_state);
-            var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
+        // creates or closes an AMS Incident.
+        gs.info("PushAMSIncident"+current.number+' status '+current.incident_state);
+        var ams_account;
+        var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
+        ams_incident.addQuery('incident','=', current.sys_id);
+        ams_incident.query();
+        if (ams_incident.next()) {
+            ams_account = ams_incident.ams_account.getRefRecord();
+            if (ams_account.active) {
+                if (current.incident_state > 5) {
+                    var result = closeAMSCase(ams_incident.case_id, ams_account);
+                }
+            }
+        } else if (current.assignment_group != '') {
+            ams_account = new GlideRecord('x_195647_ams_ams_accounts');
             ams_account.addQuery('assignment_group','=', current.assignment_group.sys_id);
             ams_account.query();
             if (ams_account.next() && ams_account.active) {
-                var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
-                ams_incident.addQuery('incident','=', current.sys_id);
-                ams_incident.query();
-                if (ams_incident.next()) {
-                    if (current.incident_state > 5) {
-                        var result = closeAMSCase(ams_incident.case_id, ams_account);
-                    }
-                } else {
-                    var new_ams_incident = createAMSCase(current, ams_account);
-                }
-            } else {
-                gs.info("No active AMS account exists for this resolver group.");
+                var new_ams_incident = createAMSCase(current, ams_account);
             }
-        }
-        catch (ex) {
-            gs.error(ex);
         }
     })();
 })(current, previous);]]></script>
@@ -129,7 +126,7 @@ function closeAMSCase(caseId, ams_account) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>7fb7d674db2413004becfabdbf96195b</sys_id>
-        <sys_mod_count>102</sys_mod_count>
+        <sys_mod_count>103</sys_mod_count>
         <sys_name>PushAMSIncident</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -137,7 +134,7 @@ function closeAMSCase(caseId, ams_account) {
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_7fb7d674db2413004becfabdbf96195b</sys_update_name>
         <sys_updated_by>abel.tuter</sys_updated_by>
-        <sys_updated_on>2018-03-16 14:34:50</sys_updated_on>
+        <sys_updated_on>2018-03-21 02:23:54</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>

@@ -31,11 +31,9 @@ function getLastCommentTimeByUser(incident_id, user_name) {
     }
     return String(timestamp).replace(" ", "T");
 }
-
+//take this function to a script include
 function setIncidentState(incident, incident_case, ams_incident, ams_account) {
     //var incident = ams_incident.incident.getRefRecord();
-    //gs.info("CASE: " + ams_incident.case_id + " status: " + ams_incident.status);
-    //gs.info("NEW_STATUS: " + status);
     switch(incident_case.status) {
         case 'unassigned':
             incident.state = 1;
@@ -58,10 +56,14 @@ function setIncidentState(incident, incident_case, ams_incident, ams_account) {
             break;
         case 'resolved':
             incident.state = 6;
-            incident.close_code = 'Solved';
+            //hardocded as the is no resolution code advertised by AMS
+            incident.close_code = 'Solved'; 
             incident.close_notes = 'Resolved by AMS';
             incident.resolved_by = ams_account.assignment_user;
             incident.assigned_to = ams_account.assignment_user;
+            break;
+        case 'reopened':
+            incident.state = 1;
             break;
     }
     ams_incident.status = incident_case.status;
@@ -84,7 +86,7 @@ function getActiveCasesForAccount(ams_account) {
     //gs.info("caseIdList"+caseIdList);
 
     var params = {
-        includeCommunications: false,
+        includeCommunications: true,
         includeResolvedCases: true,
         caseIdList: caseIdList
     };
@@ -132,6 +134,22 @@ function updateCommunications(ams_incident, ams_account) {
     }
 }
 
+function createNewIncidentRecord(ams_incident, ams_case, ams_account) {
+    // create the relation case first to ugly-prevent it ever getting dupplicated.
+    var new_incident = new GlideRecord('incident');
+    new_incident.initialize(); 
+    new_incident.short_description = ams_case.subject;
+    new_incident.description = ams_case.recentCommunications.communications[0].body;
+    new_incident.caller_id = ams_account.assignment_user;
+    new_incident.insert();
+    
+    ams_incident.incident = new_incident.sys_id;
+    ams_incident.update();
+    
+    new_incident.update();
+    return new_incident;
+}
+
 gs.include('AMSIncidentAPI');
 (function AMSIncidentUpdater() {
     var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
@@ -148,9 +166,15 @@ gs.include('AMSIncidentAPI');
                 ams_incident.query();
                 while (ams_incident.next()) {
                     var incident = ams_incident.incident.getRefRecord();
-                    if (incident.isNewRecord()) { continue; } //prevents race condition
-                    setIncidentState(incident, ams_case, ams_incident, ams_account);
-                    updateCommunications(ams_incident, ams_account);
+                    //if the incident is new, create it: prevents race condition
+                    if (incident.isNewRecord()) {
+                        incident = createNewIncidentRecord(ams_incident, ams_case, ams_account);
+                    }
+                    // if the assignment group of the incident is not AMS do not synchronize.
+                    if (incident.assignment_group == ams_account.assignment_group) {
+                        setIncidentState(incident, ams_case, ams_incident, ams_account);
+                        updateCommunications(ams_incident, ams_account);
+                    }
                 }
             }
 
@@ -161,14 +185,14 @@ gs.include('AMSIncidentAPI');
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-03-12 13:28:51</sys_created_on>
         <sys_id>c0916fa1db3013004becfabdbf961933</sys_id>
-        <sys_mod_count>245</sys_mod_count>
+        <sys_mod_count>247</sys_mod_count>
         <sys_name>AMSIncidentUpdater</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sysauto_script_c0916fa1db3013004becfabdbf961933</sys_update_name>
         <sys_updated_by>abel.tuter</sys_updated_by>
-        <sys_updated_on>2018-03-16 15:14:11</sys_updated_on>
+        <sys_updated_on>2018-03-21 02:30:03</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>
