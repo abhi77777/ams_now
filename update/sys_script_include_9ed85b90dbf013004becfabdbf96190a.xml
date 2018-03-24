@@ -5,7 +5,7 @@
         <active>true</active>
         <api_name>x_195647_ams.AMSIncidentAPI</api_name>
         <client_callable>false</client_callable>
-        <description>Wrapper around AMS Incidents for simple Creat, Read &amp; List ops.</description>
+        <description>Wrapper around AMS Incidents (AWS support api)</description>
         <name>AMSIncidentAPI</name>
         <script><![CDATA[gs.include('AWSSignUtil');
 var AMSIncidentAPI = Class.create();
@@ -132,7 +132,7 @@ AMSIncidentAPI.prototype = {
         }*/
         var params = {
             "caseId" : String(caseId)
-        }
+        };
         var request = this._build_request(params, 'ResolveCase');
         response = request.execute();
         if (response.haveError()) {
@@ -140,6 +140,27 @@ AMSIncidentAPI.prototype = {
         } else {
             return JSON.parse(response.getBody());
         }
+    },
+
+    addAttachmentsToSet: function(params) {
+        /*{
+            "attachmentSetId": "", 
+            "attachments": [
+                {
+                    "fileName": "", 
+                    "data": null
+                }
+            ]
+        }*/
+
+        var request = this._build_request(params, 'AddAttachmentsToSet');
+        response = request.execute();
+        if (response.haveError()) {
+            gs.error(response.getErrorMessage());
+        } else {
+            return JSON.parse(response.getBody());
+        }
+        
     },
 
     _build_request: function(params, action) {
@@ -164,7 +185,7 @@ AMSIncidentAPI.prototype = {
         request.setRequestHeader('X-Amz-Date', signature.headers['X-Amz-Date']);
         request.setRequestHeader('User-Agent', signature.headers['User-Agent']);
         request.setRequestBody(opts.body);
-        gs.info("PARAMS: "+opts.body);
+		//gs.info("PARAMS:" + JSON.stringify(opts.body));
         return request;
     },
 
@@ -182,13 +203,13 @@ AMSIncidentAPI.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-03-08 15:39:12</sys_created_on>
         <sys_id>9ed85b90dbf013004becfabdbf96190a</sys_id>
-        <sys_mod_count>78</sys_mod_count>
+        <sys_mod_count>82</sys_mod_count>
         <sys_name>AMSIncidentAPI</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_9ed85b90dbf013004becfabdbf96190a</sys_update_name>
-        <sys_updated_by>federico.borgnia</sys_updated_by>
-        <sys_updated_on>2018-03-23 11:06:39</sys_updated_on>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-03-24 22:10:51</sys_updated_on>
     </sys_script_include>
 </record_update>
