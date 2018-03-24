@@ -43,11 +43,11 @@ function setIncidentState(incident, incident_case, ams_incident, ams_account) {
             incident.assigned_to = ams_account.assignment_user;
             break;
         case 'pending-customer-action':
-            incident.state = 1;
+            incident.state = 2;
             incident.assigned_to = 'NULL';
             break;
         case 'customer-action-completed':
-            incident.state = 1;
+            incident.state = 2;
             incident.assigned_to = ams_account.assignment_user;
             break;
         case 'opened':
@@ -81,7 +81,9 @@ function getActiveCasesForAccount(ams_account) {
     // should optimize query
     ams_incident.query();
     while (ams_incident.next()) {
-        caseIdList.push(String(ams_incident.case_id));
+		if (ams_incident.case_id != '') {
+			caseIdList.push(String(ams_incident.case_id));
+		}
     }
     //gs.info("caseIdList"+caseIdList);
 
@@ -159,6 +161,7 @@ gs.include('AMSIncidentAPI');
         if (ams_account.active) {
             gs.info("UPDATE from account: "+ams_account.environment_name);
             var ams_cases = getActiveCasesForAccount(ams_account);
+			if (!ams_cases) {continue;}
             for (var i = 0; i < ams_cases.length; i++) {
                 var ams_case = ams_cases[i];
                 var ams_incident = new GlideRecord('x_195647_ams_ams_incidents');
@@ -184,15 +187,17 @@ gs.include('AMSIncidentAPI');
         <sys_class_name>sysauto_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-03-12 13:28:51</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
         <sys_id>c0916fa1db3013004becfabdbf961933</sys_id>
-        <sys_mod_count>247</sys_mod_count>
+        <sys_mod_count>252</sys_mod_count>
         <sys_name>AMSIncidentUpdater</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sysauto_script_c0916fa1db3013004becfabdbf961933</sys_update_name>
-        <sys_updated_by>abel.tuter</sys_updated_by>
-        <sys_updated_on>2018-03-21 02:30:03</sys_updated_on>
+        <sys_updated_by>federico.borgnia</sys_updated_by>
+        <sys_updated_on>2018-03-23 11:46:42</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>
