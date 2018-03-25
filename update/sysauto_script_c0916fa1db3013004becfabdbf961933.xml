@@ -127,6 +127,16 @@ function updateCommunications(ams_incident, ams_account) {
     for (var c = 0; c < comms.length; c++) {
         var comm = comms[c];
         if (comm.submittedBy.match(snow_user)) { return; }
+        if (comm.attachmentSet.length > 0) {
+            for (var a = 0; a < comm.attachmentSet.length; a++) {
+                params = {
+                    attachmentId: String(comm.attachmentSet[a].attachmentId)
+                };
+                attachment = AMSApi.describeAttachment(params).attachment;
+                var sa = new GlideSysAttachment();
+                sa.writeBase64( incident, String(attachment.fileName), 'text/plain', String(attachment.data));
+            }
+        }
         incident.autoSysFields(false);
         incident.comments = comm.body;
         incident.sys_updated_on = comm.timeCreated.substring(0,(comm.timeCreated.length-5)).replace("T", " ");
@@ -189,14 +199,14 @@ gs.include('AMSIncidentAPI');
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-03-12 13:28:51</sys_created_on>
         <sys_id>c0916fa1db3013004becfabdbf961933</sys_id>
-        <sys_mod_count>253</sys_mod_count>
+        <sys_mod_count>259</sys_mod_count>
         <sys_name>AMSIncidentUpdater</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sysauto_script_c0916fa1db3013004becfabdbf961933</sys_update_name>
         <sys_updated_by>abel.tuter</sys_updated_by>
-        <sys_updated_on>2018-03-24 22:34:48</sys_updated_on>
+        <sys_updated_on>2018-03-25 00:04:33</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>
