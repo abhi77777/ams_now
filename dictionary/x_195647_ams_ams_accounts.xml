@@ -7,7 +7,7 @@
         <element label="Assignment User" max_length="32" name="assignment_user" reference="sys_user" type="reference"/>
         <element label="Automatically configure User and Group" max_length="40" name="auto_setup" type="boolean"/>
         <element display="true" label="Environment name" mandatory="true" max_length="255" name="environment_name" type="string"/>
-        <element default="ServiceNowConnector" label="IAM UserName" max_length="255" name="iam_user_name" type="string"/>
+        <element default="snow_connector" label="IAM UserName" max_length="255" name="iam_user_name" type="string"/>
         <element label="AWS Secret key" mandatory="true" max_length="40" name="secret_key" type="string"/>
         <index name="index">
             <element name="assignment_user"/>
