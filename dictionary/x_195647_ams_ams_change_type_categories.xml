@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element attributes="update_synch=true" extends="sc_category" label="AMS Change Type Categories" max_length="40" name="x_195647_ams_ams_change_type_categories" type="collection"/>
+</database>
