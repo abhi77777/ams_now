@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_195647_ams.AMSChangeManagementAPI</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>AMSChangeManagementAPI</name>
+        <script><![CDATA[var AMSChangeManagementAPI = Class.create();
+AMSChangeManagementAPI.prototype = {
+    initialize: function(creds) {
+        this.creds    = creds;
+        this.endpoint = 'https://amscm.us-east-1.amazonaws.com/';
+    },
+
+    listChangeTypeCategories: function () {
+      var request = this._build_request({}, 'ListChangeTypeCategories');
+      response = request.execute();
+      if (response.haveError()) {
+          gs.error(response.getErrorMessage());
+      } else {
+          return JSON.parse(response.getBody()).ChangeTypeCategories;
+      }
+    },
+
+    listChangeTypeSubCategories: function (params) {
+    	/*{
+		    "Category": "", 
+		    "Locale": "", 
+		    "MaxResults": 0, 
+		    "NextToken": ""
+			}*/
+
+      var request = this._build_request(params, 'ListChangeTypeSubcategories');
+      response = request.execute();
+      if (response.haveError()) {
+          gs.error(response.getErrorMessage());
+      } else {
+          return JSON.parse(response.getBody()).ChangeTypeSubcategories;
+      }
+    },
+
+    listChangeTypeItems: function (params) {
+    	/*{
+		    "Category": "", 
+		    "Locale": "", 
+		    "MaxResults": 0, 
+		    "NextToken": "", 
+		    "Subcategory": ""
+			}*/
+			
+      var request = this._build_request(params, 'ListChangeTypeItems');
+      response = request.execute();
+      if (response.haveError()) {
+          gs.error(response.getErrorMessage());
+      } else {
+          return JSON.parse(response.getBody()).ChangeTypeItems;
+      }
+    },
+
+    listChangeTypeOperations: function (params) {
+    	/*{
+		    "Category": "", 
+		    "Locale": "", 
+		    "Item": "", 
+		    "MaxResults": 0, 
+		    "NextToken": "", 
+		    "Subcategory": ""
+			}*/
+
+      var request = this._build_request(params, 'ListChangeTypeOperations');
+      response = request.execute();
+      if (response.haveError()) {
+          gs.error(response.getErrorMessage());
+      } else {
+          return JSON.parse(response.getBody()).ChangeTypeOperationSummaries;
+      }
+    },
+
+    getChangeTypeIds: function () {
+    	// iterate over category/subcategory/item/operation to list all change type ids.
+    	// returns array of objects with category/subcategory/item/operation+change_id
+    	// its very slow, use with caution
+    	var params;
+			var change_type_list = [];
+			var categories = this.listChangeTypeCategories();
+			for (var c = 0; c < categories.length; c++) {
+				params = {
+					Category: categories[c]
+				};
+				
+				var subcategories = this.listChangeTypeSubCategories(params);
+				for (var s = 0; s < subcategories.length; s++) {
+					params = {
+						Category: categories[c],
+						Subcategory: subcategories[s]
+					};
+					
+					var items = this.listChangeTypeItems(params);
+					for (var i = 0; i < items.length; i++) {
+						params = {
+							Category: categories[c],
+							Subcategory: subcategories[s],
+							Item: items[i]
+						};
+						
+						var operations = this.listChangeTypeOperations(params);
+						for (var o = 0; o < operations.length; o++) {
+							change_type_list.push({
+								Category: categories[c],
+								Subcategory: subcategories[s],
+								Item: items[i],
+								Operation: operations[o].Operation,
+								ChangeTypeId: operations[o].ChangeTypeId
+							});
+						}
+					}
+				}
+			}
+      return change_type_list;
+    },
+
+    getChangeTypeVersion: function (params) {
+    	/*{
+		    "ChangeTypeId": "", 
+		    "Locale": "", 
+		    "Version": ""
+			}*/
+
+      var request = this._build_request(params, 'GetChangeTypeVersion');
+      response = request.execute();
+      if (response.haveError()) {
+          gs.error(response.getErrorMessage());
+      } else {
+          return JSON.parse(response.getBody()).ChangeTypeVersion;
+      }
+    },
+
+    _build_request: function(params, action) {
+        var opts = {
+            service : 'amscm', // 'AWSSupport_20130415.',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-amz-json-1.1',
+                'X-Amz-Target': 'AWSEnergonService.',
+                'User-Agent'  : ''
+            }
+        };
+        opts.headers['X-Amz-Target'] += action;
+        opts.body = JSON.stringify(params);
+        var signature = AWSSignUtil.sign(opts, this.creds);
+        var request = new sn_ws.RESTMessageV2();
+        request.setHttpMethod(opts.method);
+        request.setEndpoint(this.endpoint);
+        request.setRequestHeader('Content-Type', opts.headers['Content-Type']);
+        request.setRequestHeader('X-Amz-Target', opts.headers['X-Amz-Target']);
+        request.setRequestHeader('Authorization', signature.headers.Authorization);
+        request.setRequestHeader('X-Amz-Date', signature.headers['X-Amz-Date']);
+        request.setRequestHeader('User-Agent', signature.headers['User-Agent']);
+        request.setRequestBody(opts.body);
+        return request;
+    },
+
+    _extend: function extend(obj, src) {
+        for (var key in src) {
+            if (src.hasOwnProperty(key)) obj[key] = src[key];
+        }
+        return obj;
+    },
+
+    type: 'AMSChangeManagementAPI'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-04-11 14:41:11</sys_created_on>
+        <sys_id>ded15edbdb1913004becfabdbf9619aa</sys_id>
+        <sys_mod_count>11</sys_mod_count>
+        <sys_name>AMSChangeManagementAPI</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sys_script_include_ded15edbdb1913004becfabdbf9619aa</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-04-11 17:19:25</sys_updated_on>
+    </sys_script_include>
+</record_update>

@@ -6,6 +6,7 @@
         <element label="Assignment group" max_length="40" name="assignment_group" reference="sys_user_group" type="reference"/>
         <element label="Assignment User" max_length="32" name="assignment_user" reference="sys_user" type="reference"/>
         <element label="Automatically configure User and Group" max_length="40" name="auto_setup" type="boolean"/>
+        <element label="Catalog" max_length="32" name="catalog" reference="sc_catalog" type="reference"/>
         <element display="true" label="Environment name" mandatory="true" max_length="255" name="environment_name" type="string"/>
         <element default="snow_connector" label="IAM UserName" max_length="255" name="iam_user_name" type="string"/>
         <element label="AWS Secret key" mandatory="true" max_length="40" name="secret_key" type="string"/>
@@ -13,6 +14,9 @@
             <element name="assignment_user"/>
         </index>
         <index name="index2">
+            <element name="catalog"/>
+        </index>
+        <index name="index3">
             <element name="assignment_group"/>
         </index>
     </element>

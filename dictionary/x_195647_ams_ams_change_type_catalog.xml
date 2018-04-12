@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element attributes="update_synch=true" extends="sc_cat_item" label="AMS Change Type Catalog" max_length="40" name="x_195647_ams_ams_change_type_catalog" type="collection">
+        <element label="Change Type Id" max_length="40" name="change_type_id" type="string"/>
+    </element>
+</database>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_195647_ams.AMSChangeTypesIngestion</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>AMSChangeTypesIngestion</name>
+        <script><![CDATA[gs.include('AMSChangeManagementAPI');
+var AMSChangeTypesIngestion = Class.create();
+AMSChangeTypesIngestion.prototype = {
+    initialize: function(ams_account) {
+      this.ams_account = ams_account;
+      this.catalog = ams_account.catalog.getRefRecord();
+      var creds = {
+        accessKeyId: String(ams_account.api_key),
+        secretAccessKey: String(ams_account.secret_key)
+      };
+      this.amscm = new AMSChangeManagementAPI(creds);
+      this.catalog_item_table = 'x_195647_ams_ams_change_type_catalog';
+
+      var sc_category = new GlideRecord('sc_category');
+      sc_category.addQuery("title", "=", 'AMS Change Types');
+      sc_category.query();
+      if (sc_category.next()){
+        this.catalog_category = sc_category;
+        this.catalog = sc_category.sc_catalog;
+      }
+    },
+
+    ingestChangeTypes: function () {
+      // creates catalogItems in this.catalog from an array of AMS change types
+      // the array is the one produced by AMSChangeManagementAPI.getChangeTypeIds
+      var change_types = this.amscm.getChangeTypeIds();
+      for (var i = 0; i < change_types.length; i++) {
+        var item = new GlideRecord(this.catalog_item_table);
+        item.initialize();
+        item.name = change_types[i].Operation +' '+ change_types[i].Item;
+        item.change_type_id = change_types[i].ChangeTypeId;
+        item.sc_catalogs = this.catalog;
+        // here i need to find or create the CT Category,subcategory> that are in turn a subcategory of AMS
+        var category = new GlideRecord('sc_category');
+        category.addQuery("title", "=", change_types[i].Category);
+        category.query();
+        if (!category.next()){
+          category.initialize();
+          category.title = change_types[i].Category;
+          category.parent = this.catalog_category.sys_id;
+          category.insert();
+          gs.info("NEW Category: "+category.sys_id);
+        }
+        var sub_category = new GlideRecord('sc_category');
+        sub_category.addQuery("title", "=", change_types[i].Subcategory);
+        sub_category.query();
+        if (!sub_category.next()){
+          sub_category.initialize();
+          sub_category.title = change_types[i].Subcategory;
+          sub_category.parent = category.sys_id;
+          sub_category.insert();
+          gs.info("NEW SUB Category: "+sub_category.sys_id);
+        }
+        //item.category = this.catalog_category.sys_id;
+        item.category = sub_category.sys_id;
+        item.insert();
+      }
+    },
+
+    
+
+    type: 'AMSChangeTypesIngestion'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-04-11 21:56:25</sys_created_on>
+        <sys_id>0965371bdb1d13004becfabdbf961988</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>AMSChangeTypesIngestion</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sys_script_include_0965371bdb1d13004becfabdbf961988</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-04-12 04:03:44</sys_updated_on>
+    </sys_script_include>
+</record_update>
