@@ -48,7 +48,7 @@ AMSChangeTypesIngestion.prototype = {
           category.title = change_types[i].Category;
           category.parent = this.catalog_category.sys_id;
           category.insert();
-          gs.info("NEW Category: "+category.sys_id);
+          //gs.info("NEW Category: "+category.sys_id);
         }
         var sub_category = new GlideRecord('x_195647_ams_ams_change_type_categories');
         sub_category.addQuery("title", "=", change_types[i].Subcategory);
@@ -58,36 +58,38 @@ AMSChangeTypesIngestion.prototype = {
           sub_category.title = change_types[i].Subcategory;
           sub_category.parent = category.sys_id;
           sub_category.insert();
-          gs.info("NEW SUB Category: "+sub_category.sys_id);
+          //gs.info("NEW SUB Category: "+sub_category.sys_id);
         }
         //item.category = this.catalog_category.sys_id;
         item.category = sub_category.sys_id;
         
         try {
           var change_type_schema = this.amscm.getChangeTypeVersion({ChangeTypeId: String(item.change_type_id)});
-          var execution_input_schema = JSON.parse(change_type_schema.ExecutionInputSchema);
-          var schema_properties_keys = Object.keys(execution_input_schema.properties);
-          gs.info("CT Properties " + JSON.stringify(schema_properties_keys) + " CT ID " + item.change_type_id);
-          item.short_description = execution_input_schema.description;
-          item.insert();
-          gs.info("meti CT " + item.sys_id + " ct id " + item.name + " category "+ item.category);
-          // variables now:
-          // go get the schema with getChangeTypeVersion
-          // iterate the schema and create variables for each attribute of ExecutionInputSchema
-          //gs.info("CT ID " + item.change_type_id);
-          //gs.info("SCHEMA" + JSON.stringify(change_type_schema));
+          if (change_type_schema) {
+            var execution_input_schema = JSON.parse(change_type_schema.ExecutionInputSchema);
+            var schema_properties_keys = Object.keys(execution_input_schema.properties);
+            gs.info("CT Properties " + JSON.stringify(schema_properties_keys) + " CT ID " + item.change_type_id);
+            item.short_description = execution_input_schema.description;
+            item.insert();
+            //gs.info("meti CT " + item.sys_id + " ct id " + item.name + " category "+ item.category);
+            // variables now:
+            // go get the schema with getChangeTypeVersion
+            // iterate the schema and create variables for each attribute of ExecutionInputSchema
+            //gs.info("CT ID " + item.change_type_id);
+            //gs.info("SCHEMA" + JSON.stringify(change_type_schema));
 
-          for (var p = 0; p < schema_properties_keys.length; p++) {
-            gs.info("quiero meter variable"+schema_properties_keys[p]);
-            //var variable = new GlideRecord('x_195647_ams_ams_change_type_variables');
-            var variable = new GlideRecord('item_option_new');
-            variable.initialize();
-            variable.cat_item = item.sys_id;
-            variable.name = schema_properties_keys[p];
-            variable.question_text = schema_properties_keys[p];
-            variable.tooltip = schema_properties_keys[p];
-            variable.insert();
-            gs.info("meti variable"+variable.sys_id+" name "+variable.name);
+            for (var p = 0; p < schema_properties_keys.length; p++) {
+              gs.info("quiero meter variable"+schema_properties_keys[p]);
+              //var variable = new GlideRecord('x_195647_ams_ams_change_type_variables');
+              var variable = new GlideRecord('item_option_new');
+              variable.initialize();
+              variable.cat_item = item.sys_id;
+              variable.name = schema_properties_keys[p];
+              variable.question_text = schema_properties_keys[p];
+              variable.tooltip = schema_properties_keys[p];
+              variable.insert();
+              //gs.info("meti variable"+variable.sys_id+" name "+variable.name);
+            }
           }
         }
         catch(err) {
@@ -105,13 +107,13 @@ AMSChangeTypesIngestion.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 21:56:25</sys_created_on>
         <sys_id>0965371bdb1d13004becfabdbf961988</sys_id>
-        <sys_mod_count>28</sys_mod_count>
+        <sys_mod_count>31</sys_mod_count>
         <sys_name>AMSChangeTypesIngestion</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_0965371bdb1d13004becfabdbf961988</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-12 18:50:40</sys_updated_on>
+        <sys_updated_on>2018-04-13 09:45:47</sys_updated_on>
     </sys_script_include>
 </record_update>
