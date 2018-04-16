@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_ui_form_sections form_id="ba37254d4fe1130091e138a18110c702" sys_domain="global" table="x_195647_ams_ams_change_type_producer" version="3">
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>0</position>
+            <sys_created_by>system</sys_created_by>
+            <sys_created_on>2018-04-16 22:04:09</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>0737254d4fe1130091e138a18110c703</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_195647_ams_ams_change_type_producer" name="x_195647_ams_ams_change_type_producer" sys_domain="global" view="Default view">ba37254d4fe1130091e138a18110c702</sys_ui_form>
+            <sys_ui_section caption="Generated Record Data" display_value="Generated Record Data" name="x_195647_ams_ams_change_type_producer" sys_domain="global" view="Default view">afcc05c94fa1130091e138a18110c7f0</sys_ui_section>
+            <sys_updated_by>system</sys_updated_by>
+            <sys_updated_on>2018-04-16 22:04:09</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>1</position>
+            <sys_created_by>system</sys_created_by>
+            <sys_created_on>2018-04-16 22:04:09</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>0337254d4fe1130091e138a18110c704</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_195647_ams_ams_change_type_producer" name="x_195647_ams_ams_change_type_producer" sys_domain="global" view="Default view">ba37254d4fe1130091e138a18110c702</sys_ui_form>
+            <sys_ui_section caption="What it will contain" display_value="What it will contain" name="x_195647_ams_ams_change_type_producer" sys_domain="global" view="Default view">e3cc05c94fa1130091e138a18110c7e9</sys_ui_section>
+            <sys_updated_by>system</sys_updated_by>
+            <sys_updated_on>2018-04-16 22:04:09</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>2</position>
+            <sys_created_by>system</sys_created_by>
+            <sys_created_on>2018-04-16 22:04:09</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>c737254d4fe1130091e138a18110c708</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_195647_ams_ams_change_type_producer" name="x_195647_ams_ams_change_type_producer" sys_domain="global" view="Default view">ba37254d4fe1130091e138a18110c702</sys_ui_form>
+            <sys_ui_section caption="Accessibility" display_value="Accessibility" name="x_195647_ams_ams_change_type_producer" sys_domain="global" view="Default view">e7cc05c94fa1130091e138a18110c7ec</sys_ui_section>
+            <sys_updated_by>system</sys_updated_by>
+            <sys_updated_on>2018-04-16 22:04:09</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>3</position>
+            <sys_created_by>system</sys_created_by>
+            <sys_created_on>2018-04-16 22:04:09</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>4b37254d4fe1130091e138a18110c70d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_195647_ams_ams_change_type_producer" name="x_195647_ams_ams_change_type_producer" sys_domain="global" view="Default view">ba37254d4fe1130091e138a18110c702</sys_ui_form>
+            <sys_ui_section caption="NULL" display_value="" name="x_195647_ams_ams_change_type_producer" sys_domain="global" view="Default view">ebcc05c94fa1130091e138a18110c7ee</sys_ui_section>
+            <sys_updated_by>system</sys_updated_by>
+            <sys_updated_on>2018-04-16 22:04:09</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form action="INSERT_OR_UPDATE">
+            <name>x_195647_ams_ams_change_type_producer</name>
+            <roles/>
+            <sys_class_name>sys_ui_form</sys_class_name>
+            <sys_created_by>system</sys_created_by>
+            <sys_created_on>2018-04-16 22:04:09</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>ba37254d4fe1130091e138a18110c702</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_195647_ams_ams_change_type_producer</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+            <sys_update_name>sys_ui_form_sections_ba37254d4fe1130091e138a18110c702</sys_update_name>
+            <sys_updated_by>system</sys_updated_by>
+            <sys_updated_on>2018-04-16 22:04:09</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_form>
+    </sys_ui_form_sections>
+</record_update>

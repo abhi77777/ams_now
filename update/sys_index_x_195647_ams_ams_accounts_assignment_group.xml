@@ -2,7 +2,7 @@
 <record_update table="sys_index">
     <sys_index action="INSERT_OR_UPDATE">
         <col_name_string>assignment_group</col_name_string>
-        <index_col_name element="assignment_group" name="x_195647_ams_ams_accounts">f8ee8c854f21130091e138a18110c748</index_col_name>
+        <index_col_name element="assignment_group" name="x_195647_ams_ams_accounts">8937614d4fe1130091e138a18110c779</index_col_name>
         <logical_table_name>x_195647_ams_ams_accounts</logical_table_name>
         <sys_class_name>sys_index</sys_class_name>
         <sys_created_by>admin</sys_created_by>

@@ -52,15 +52,15 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-16 17:38:53</sys_created_on>
-        <sys_id>266a6c894f61130091e138a18110c70a</sys_id>
+        <sys_id>5937614d4fe1130091e138a18110c793</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Change Type Id</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_dictionary_x_195647_ams_ams_change_type_producer_change_type_id</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-16 17:38:53</sys_updated_on>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2018-04-16 22:04:04</sys_updated_on>
         <table_reference>false</table_reference>
         <text_index>false</text_index>
         <unique>false</unique>
