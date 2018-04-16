@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <record_update>
-    <sys_documentation element="change_type_id" label="Change Type Id" language="en" table="x_195647_ams_ams_change_type_catalog">
+    <sys_documentation element="change_type_id" label="Change Type Id" language="en" table="x_195647_ams_ams_change_type_producer">
         <sys_documentation action="INSERT_OR_UPDATE">
             <element>change_type_id</element>
             <help/>
             <hint/>
             <label>Change Type Id</label>
             <language>en</language>
-            <name>x_195647_ams_ams_change_type_catalog</name>
+            <name>x_195647_ams_ams_change_type_producer</name>
             <plural>Change Type Ids</plural>
             <sys_class_name>sys_documentation</sys_class_name>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2018-04-12 03:15:05</sys_created_on>
-            <sys_id>857e3c2fdb9d13004becfabdbf9619c7</sys_id>
+            <sys_created_on>2018-04-16 17:38:53</sys_created_on>
+            <sys_id>5d8a6c894f61130091e138a18110c7e1</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_name>Change Type Id</sys_name>
             <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
             <sys_policy/>
             <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
-            <sys_update_name>sys_documentation_x_195647_ams_ams_change_type_catalog_change_type_id_en</sys_update_name>
+            <sys_update_name>sys_documentation_x_195647_ams_ams_change_type_producer_change_type_id_en</sys_update_name>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2018-04-12 03:15:05</sys_updated_on>
+            <sys_updated_on>2018-04-16 17:38:53</sys_updated_on>
             <url/>
             <url_target/>
         </sys_documentation>
