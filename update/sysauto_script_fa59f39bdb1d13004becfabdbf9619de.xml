@@ -17,9 +17,10 @@
 var ams_account = new GlideRecord("x_195647_ams_ams_accounts");
 ams_account.query();
 while (ams_account.next()) {
-    gs.info("Ingest CTs for account "+ams_account.environment_name);
+    gs.info("Initiated Ingest CTs for account "+ams_account.environment_name);
     var CTIngest = new AMSChangeTypesIngestion(ams_account);
     CTIngest.ingestChangeTypes();
+	gs.info("Completed Ingest CTs for account "+ams_account.environment_name);
 }
 
 ]]></script>
@@ -27,14 +28,14 @@ while (ams_account.next()) {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 22:13:45</sys_created_on>
         <sys_id>fa59f39bdb1d13004becfabdbf9619de</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>1</sys_mod_count>
         <sys_name>IngestChangeTypes</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sysauto_script_fa59f39bdb1d13004becfabdbf9619de</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-11 22:13:45</sys_updated_on>
+        <sys_updated_on>2018-04-16 11:32:01</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>
