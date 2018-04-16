@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<database>
-    <element attributes="update_synch=true" extends="sys_template" label="AMS Change Type Templates" max_length="40" name="x_195647_ams_ams_change_type_templates" type="collection"/>
-</database>
