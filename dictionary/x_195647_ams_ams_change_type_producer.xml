@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element attributes="update_synch=true" extends="sc_cat_item_producer" label="AMS Change Type Producer" max_length="40" name="x_195647_ams_ams_change_type_producer" type="collection"/>
+</database>

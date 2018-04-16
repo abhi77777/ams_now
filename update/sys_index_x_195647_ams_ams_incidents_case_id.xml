@@ -2,7 +2,7 @@
 <record_update table="sys_index">
     <sys_index action="INSERT_OR_UPDATE">
         <col_name_string>case_id</col_name_string>
-        <index_col_name element="case_id" name="x_195647_ams_ams_incidents">773c8f38db2113004becfabdbf961995</index_col_name>
+        <index_col_name element="case_id" name="x_195647_ams_ams_incidents">acee8c854f21130091e138a18110c710</index_col_name>
         <logical_table_name>x_195647_ams_ams_incidents</logical_table_name>
         <sys_class_name>sys_index</sys_class_name>
         <sys_created_by>admin</sys_created_by>
