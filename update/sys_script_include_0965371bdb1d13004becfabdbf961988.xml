@@ -12,7 +12,6 @@ var AMSChangeTypesIngestion = Class.create();
 AMSChangeTypesIngestion.prototype = {
     initialize: function(ams_account) {
       this.ams_account = ams_account;
-      this.catalog = ams_account.catalog.getRefRecord();
       var creds = {
         accessKeyId: String(ams_account.api_key),
         secretAccessKey: String(ams_account.secret_key)
@@ -21,6 +20,12 @@ AMSChangeTypesIngestion.prototype = {
       //this.catalog_item_table = 'x_195647_ams_ams_change_type_catalog';
       //this.catalog_item_table = 'x_195647_ams_ams_change_type_producer';
       this.catalog_item_table = 'sc_cat_item_producer';
+      //this.category_table = 'sc_category';
+      this.category_table = 'x_195647_ams_ams_change_type_categories';
+      //this.variable_table = 'item_option_new';
+      this.variable_table = 'x_195647_ams_ams_change_type_variables';
+      //this.producer_table = 'x_195647_ams_ams_change_requests';
+      this.producer_table = 'change_request';
 
       var sc_category = new GlideRecord('sc_category');
       sc_category.addQuery("title", "=", 'AMS Change Types');
@@ -37,17 +42,28 @@ AMSChangeTypesIngestion.prototype = {
       var change_types = this.amscm.getChangeTypeIds();
       for (var i = 0; i < change_types.length; i++) {
         var item = new GlideRecord(this.catalog_item_table);
+        //this does not work with sc_cat_item_producer record producer table.
+        item.addQuery("change_type_id", "=", change_types[i].ChangeTypeId);
+        item.query();
+        if (item.next()) {
+          item.deleteRecord();
+        }
         item.initialize();
         item.name = change_types[i].Operation +' '+ change_types[i].Item;
+
+        // if I use the sc_cat_item_producer table, I can't store permanently the ID
         item.change_type_id = change_types[i].ChangeTypeId;
+
+        item.table_name = this.producer_table;
         item.sc_catalogs = this.catalog;
+        item.ignore_price = true;
+        
         //item.no_quantity = true;
         //item.billable = false;
-        item.ignore_price = true;
         //item.can_cancel = true;
-        item.table_name = 'change_request';
-        // here i need to find or create the CT Category,subcategory> that are in turn a subcategory of AMS
-        var category = new GlideRecord('x_195647_ams_ams_change_type_categories');
+
+        // It finds or create the CT Category,subcategory
+        var category = new GlideRecord(this.category_table);
         category.addQuery("title", "=", change_types[i].Category);
         category.query();
         if (!category.next()){
@@ -57,7 +73,7 @@ AMSChangeTypesIngestion.prototype = {
           category.insert();
           //gs.info("NEW Category: "+category.sys_id);
         }
-        var sub_category = new GlideRecord('x_195647_ams_ams_change_type_categories');
+        var sub_category = new GlideRecord(this.category_table);
         sub_category.addQuery("title", "=", change_types[i].Subcategory);
         sub_category.addQuery("parent", "=", category.sys_id);
         sub_category.query();
@@ -68,35 +84,37 @@ AMSChangeTypesIngestion.prototype = {
           sub_category.insert();
           //gs.info("NEW SUB Category: "+sub_category.sys_id);
         }
-        //item.category = this.catalog_category.sys_id;
         item.category = sub_category.sys_id;
-        
+
         try {
           var change_type_schema = this.amscm.getChangeTypeVersion({ChangeTypeId: String(item.change_type_id)});
           if (change_type_schema) {
             var execution_input_schema = JSON.parse(change_type_schema.ExecutionInputSchema);
             var schema_properties_keys = Object.keys(execution_input_schema.properties);
             //gs.info("CT Properties " + JSON.stringify(schema_properties_keys) + " CT ID " + item.change_type_id);
+            
+
+
             item.short_description = execution_input_schema.description;
             item.insert();
             gs.info("Insert CT " + item.sys_id + " ct id " + item.name + " category "+ item.category);
-            // variables now:
-            // go get the schema with getChangeTypeVersion
-            // iterate the schema and create variables for each attribute of ExecutionInputSchema
+
+            // variables:
+            // goes and gets the schema with getChangeTypeVersion
+            // iterates the schema and create variables for each attribute of ExecutionInputSchema
             //gs.info("CT ID " + item.change_type_id);
             //gs.info("SCHEMA" + JSON.stringify(change_type_schema));
 
             for (var p = 0; p < schema_properties_keys.length; p++) {
               //gs.info("quiero meter variable"+schema_properties_keys[p]);
-              var variable = new GlideRecord('x_195647_ams_ams_change_type_variables');
-              //var variable = new GlideRecord('item_option_new');
+              var variable = new GlideRecord(this.variable_table);
               variable.initialize();
               variable.cat_item = item.sys_id;
               variable.name = schema_properties_keys[p];
               variable.question_text = schema_properties_keys[p];
               variable.tooltip = schema_properties_keys[p];
               variable.insert();
-              gs.info("Insert variable"+variable.sys_id+" name "+variable.name);
+              //gs.info("Insert variable"+variable.sys_id+" name "+variable.name);
             }
           }
         }
@@ -115,13 +133,13 @@ AMSChangeTypesIngestion.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 21:56:25</sys_created_on>
         <sys_id>0965371bdb1d13004becfabdbf961988</sys_id>
-        <sys_mod_count>39</sys_mod_count>
+        <sys_mod_count>40</sys_mod_count>
         <sys_name>AMSChangeTypesIngestion</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_0965371bdb1d13004becfabdbf961988</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-16 22:05:45</sys_updated_on>
+        <sys_updated_on>2018-04-18 13:16:45</sys_updated_on>
     </sys_script_include>
 </record_update>
