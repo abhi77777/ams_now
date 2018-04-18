@@ -107,7 +107,7 @@ AMSChangeTypesIngestion.prototype = {
             //gs.info("CT ID " + item.change_type_id);
             //gs.info("SCHEMA" + JSON.stringify(change_type_schema));
 
-            //insert the change type id as a variable in the producer
+            //insert the change type id and version as variables in the producer
             var variable = new GlideRecord(this.variable_table);
             variable.initialize();
             variable.cat_item = item.sys_id;
@@ -115,6 +115,15 @@ AMSChangeTypesIngestion.prototype = {
             variable.question_text = 'ChangeTypeId';
             variable.tooltip = 'ChangeTypeId';
             variable.default_value = change_types[i].ChangeTypeId;
+            variable.insert();
+
+            variable = new GlideRecord(this.variable_table);
+            variable.initialize();
+            variable.cat_item = item.sys_id;
+            variable.name = 'ChangeTypeVersion';
+            variable.question_text = 'ChangeTypeVersion';
+            variable.tooltip = 'ChangeTypeVersion';
+            variable.default_value = change_type_schema.Version;
             variable.insert();
 
             for (var p = 0; p < schema_properties_keys.length; p++) {
@@ -134,6 +143,9 @@ AMSChangeTypesIngestion.prototype = {
               variable.insert();
               //gs.info("Insert variable"+variable.sys_id+" name "+variable.name);
             }
+            vars = '["' + schema_properties_keys.join('","') + '"]';
+            item.script =  'var variables = '+ vars+';var RfcParameters = {}; RfcParameters.ChangeTypeId = String(producer.ChangeTypeId); RfcParameters.ChangeTypeVersion = String(producer.ChangeTypeVersion); ExecutionParameters = {}; for (var i = 0; i < variables.length; i++) {ExecutionParameters[variables[i]] = String(producer[variables[i]]);} RfcParameters.ExecutionParameters = JSON.stringify(ExecutionParameters); current.implementation_plan = JSON.stringify(RfcParameters);';
+            item.update();
             //break;
           }
         }
@@ -151,13 +163,13 @@ AMSChangeTypesIngestion.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 21:56:25</sys_created_on>
         <sys_id>0965371bdb1d13004becfabdbf961988</sys_id>
-        <sys_mod_count>48</sys_mod_count>
+        <sys_mod_count>51</sys_mod_count>
         <sys_name>AMSChangeTypesIngestion</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_0965371bdb1d13004becfabdbf961988</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-18 16:07:52</sys_updated_on>
+        <sys_updated_on>2018-04-18 22:28:19</sys_updated_on>
     </sys_script_include>
 </record_update>

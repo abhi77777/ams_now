@@ -14,6 +14,7 @@ AMSChangeManagementAPI.prototype = {
       this.endpoint = 'https://amscm.us-east-1.amazonaws.com/';
     },
 
+    //meta-program all this ffs.
     listChangeTypeCategories: function () {
       var request = this._build_request({}, 'ListChangeTypeCategories');
       response = request.execute();
@@ -137,6 +138,89 @@ AMSChangeManagementAPI.prototype = {
       }
     },
 
+    createRfc: function (params) {
+    	/*{
+				"ChangeTypeId": "", 
+				"ChangeTypeVersion": "", 
+				"Description": "", 
+				"ExecutionParameters": "", 
+				"ExpectedOutcome": "", 
+				"ImplementationPlan": "", 
+				"RequestedEndTime": "", 
+				"RequestedStartTime": "", 
+				"RollbackPlan": "", 
+				"Title": "", 
+				"WorstCaseScenario": ""
+			}*/
+
+      var request = this._build_request(params, 'CreateRfc');
+      response = request.execute();
+      if (response.haveError()) {
+          gs.error(response.getErrorMessage());
+      } else {
+          return JSON.parse(response.getBody()).RfcId;
+      }
+    },
+
+    submitRfc: function (params) {
+    	/*{
+		    "RestrictedExecutionTimesOverrideId": "", 
+		    "RfcId": ""
+			}*/
+
+      var request = this._build_request(params, 'SubmitRfc');
+      response = request.execute();
+      if (response.haveError()) {
+          gs.error(response.getErrorMessage());
+      } else {
+          return JSON.parse(response.getBody());
+      }
+    },
+
+    approveRfc: function (params) {
+    	/*{
+		    "RfcId": ""
+			}*/
+
+      var request = this._build_request(params, 'ApproveRfc');
+      response = request.execute();
+      if (response.haveError()) {
+          gs.error(response.getErrorMessage());
+      } else {
+          return JSON.parse(response.getBody());
+      }
+    },
+
+    cancelRfc: function (params) {
+    	/*{
+		    "Reason": "", 
+		    "RfcId": ""
+			}*/
+
+      var request = this._build_request(params, 'CancelRfc');
+      response = request.execute();
+      if (response.haveError()) {
+          gs.error(response.getErrorMessage());
+      } else {
+          return JSON.parse(response.getBody());
+      }
+    },
+
+    getRfc: function (params) {
+    	/*{
+		    "RfcId": "", 
+		    "Locale": ""
+			}*/
+
+      var request = this._build_request(params, 'GetRfc');
+      response = request.execute();
+      if (response.haveError()) {
+          gs.error(response.getErrorMessage());
+      } else {
+          return JSON.parse(response.getBody()).Rfc;
+      }
+    },
+
     _build_request: function(params, action) {
         var opts = {
             service : 'amscm', // 'AWSSupport_20130415.',
@@ -159,7 +243,6 @@ AMSChangeManagementAPI.prototype = {
         request.setRequestHeader('X-Amz-Date', signature.headers['X-Amz-Date']);
         request.setRequestHeader('User-Agent', signature.headers['User-Agent']);
         request.setRequestBody(opts.body);
-		//gs.info("PARAMS " + JSON.stringify(opts.body));
         return request;
     },
 
@@ -176,13 +259,13 @@ AMSChangeManagementAPI.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 14:41:11</sys_created_on>
         <sys_id>ded15edbdb1913004becfabdbf9619aa</sys_id>
-        <sys_mod_count>17</sys_mod_count>
+        <sys_mod_count>18</sys_mod_count>
         <sys_name>AMSChangeManagementAPI</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_ded15edbdb1913004becfabdbf9619aa</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-18 15:04:58</sys_updated_on>
+        <sys_updated_on>2018-04-18 21:17:48</sys_updated_on>
     </sys_script_include>
 </record_update>
