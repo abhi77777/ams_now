@@ -126,6 +126,16 @@ AMSChangeTypesIngestion.prototype = {
             variable.default_value = change_type_schema.Version;
             variable.insert();
 
+            variable = new GlideRecord(this.variable_table);
+            variable.initialize();
+            variable.cat_item = item.sys_id;
+            variable.name = 'Environment';
+            variable.question_text = 'Environment';
+            variable.tooltip = 'AMS Account';
+            variable.reference = 'x_195647_ams_ams_accounts';
+            variable.type = 8;
+            variable.insert();
+
             for (var p = 0; p < schema_properties_keys.length; p++) {
               //gs.info("quiero meter variable"+schema_properties_keys[p]);
               var variable = new GlideRecord(this.variable_table);
@@ -163,13 +173,13 @@ AMSChangeTypesIngestion.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 21:56:25</sys_created_on>
         <sys_id>0965371bdb1d13004becfabdbf961988</sys_id>
-        <sys_mod_count>51</sys_mod_count>
+        <sys_mod_count>53</sys_mod_count>
         <sys_name>AMSChangeTypesIngestion</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_0965371bdb1d13004becfabdbf961988</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-18 22:28:19</sys_updated_on>
+        <sys_updated_on>2018-04-19 10:27:11</sys_updated_on>
     </sys_script_include>
 </record_update>
