@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_wizard_answer">
+    <sys_wizard_answer action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <answer>AMS: Request an RFC to AMS Change Management API under the Normal Change process.</answer>
+        <button_label/>
+        <dependent_value/>
+        <element/>
+        <name>Direct to AMS Change</name>
+        <next_question/>
+        <order>100</order>
+        <payload_name/>
+        <question display_value="Change Request" name="Change Request">8db4a378c611227401b96457a060e0f4</question>
+        <roles/>
+        <script/>
+        <sys_class_name>sys_wizard_answer</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-04-20 13:49:14</sys_created_on>
+        <sys_id>a4db14da4f61130081de224f9310c7c2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Direct to AMS Change</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sys_wizard_answer_a4db14da4f61130081de224f9310c7c2</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-04-20 13:49:14</sys_updated_on>
+        <table/>
+        <target_url>com.glideapp.servicecatalog_category_view.do?v=1&amp;sysparm_parent=88213867db9d13004becfabdbf961949</target_url>
+        <type>1</type>
+    </sys_wizard_answer>
+</record_update>
