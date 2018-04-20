@@ -6,7 +6,7 @@
         <action_delete>false</action_delete>
         <action_insert>true</action_insert>
         <action_query>false</action_query>
-        <action_update>false</action_update>
+        <action_update>true</action_update>
         <active>true</active>
         <add_message>false</add_message>
         <advanced>true</advanced>
@@ -31,33 +31,102 @@
         <script><![CDATA[gs.include('AMSChangeManagementAPI');
 (function executeRule(current, previous) {
   (function createRfc() {
-    //var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
-    //ams_account.addQuery('environment_name','=', current);
-    //ams_account.query();
+
+    /*var values = [];
+    var attr = Object.keys(current);
+    attr.forEach(function(a) {
+       values.push("ATTRIBUTE "+a+" "+current[a]);
+    });
+    gs.info(values);*/
+    if (current.short_description != 'Implement') {
+      return;
+    }
+    var change_request = current.parent.getRefRecord();
+
+    var logs = [];
+    var attr = Object.keys(change_request);
+    attr.forEach(function(a) {
+       logs.push("ATTRIBUTE "+a+" "+change_request[a]);
+    });
+    gs.info("CR "+logs);
+
+    var CatalogParams = JSON.parse(change_request.implementation_plan);
+    gs.info("PARSED: "+JSON.stringify(CatalogParams));
+    if (!CatalogParams) {
+      //close/cancel the change_task as failed.
+      return;
+    }
+    var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
+    ams_account.addQuery('environment_name','=', CatalogParams.EnvironmentId);
+    ams_account.query();
+    if (!ams_account) {
+      //close/cancel the change_task as failed.
+      //return	
+    }
+
     var creds = {
-      accessKeyId: '',
-      secretAccessKey: ''
+      accessKeyId: String(ams_account.api_key),
+      secretAccessKey: String(ams_account.secret_key)
     };
 
-    var params = {
-			"ChangeTypeId": "ct-1e1xtak34nx76", 
-			"ChangeTypeVersion": "1.0", 
-			"Description": "AMSTestNoOpsActionRequired", 
-			"ExecutionParameters": "{\"Comment\":\"AMSTestNoOpsActionRequired\",\"Priority\":\"Low\"}", 
-			"ExpectedOutcome": "n/a", 
-			"ImplementationPlan": "n/a", 
-			"RequestedEndTime": "", 
-			"RequestedStartTime": "", 
-			"RollbackPlan": "n/a", 
-			"Title": "AMSTestNoOpsActionRequired", 
-			"WorstCaseScenario": "n/a"
-		};
+    // Build RFC structure into params object.
+    /*{
+      "ChangeTypeId": "ct-1e1xtak34nx76",
+      "ChangeTypeVersion": "1.0",
+      "Description": "AMSTestNoOpsActionRequired",
+      "ExecutionParameters": "{\"Comment\":\"AMSTestNoOpsActionRequired\",\"Priority\":\"Low\"}",
+      "ExpectedOutcome": "n/a",
+      "ImplementationPlan": "n/a",
+      "RequestedEndTime": "",
+      "RequestedStartTime": "",
+      "RollbackPlan": "n/a",
+      "Title": "AMSTestNoOpsActionRequired",
+      "WorstCaseScenario": "n/a"
+    }*/
+    var params = CatalogParams.RfcParameters;
+    gs.info("Sdate "+change_request.start_date)
+    if (change_request.start_date) {
+      params.RequestedStartTime = String(change_request.start_date).replace(" ", "T");
+    }
+    gs.info("Edate "+change_request.end_date)
+    if (change_request.end_date) {
+      params.RequestedEndTime = String(change_request.end_date).replace(" ", "T");
+    }if (change_request.end_date) {
+      params.RequestedEndTime = String(change_request.end_date).replace(" ", "T");
+    }
+    if (change_request.short_description) {
+      params.Title = String(change_request.short_description);
+    } else {
+      params.Title = String(change_request.number);
+    }
+    if (change_request.description) {
+      params.Description = String(change_request.description);
+    } else {
+      params.Description = String(change_request.number);
+    }
+    if (change_request.backout_plan) {
+      params.RollbackPlan = String(change_request.backout_plan);
+    } else {
+      params.RollbackPlan = 'n/a';
+    }
+    if (change_request.risk_impact_analysis) {
+      params.WorstCaseScenario = String(change_request.risk_impact_analysis);
+    } else {
+      params.WorstCaseScenario = 'n/a';
+    }
+    if (change_request.justification) {
+      params.ExpectedOutcome = String(change_request.justification);
+    } else {
+      params.ExpectedOutcome = 'n/a';
+    }
+    params.ImplementationPlan = "AMS RFC Execution";
+
 
     CmApi = new AMSChangeManagementAPI(creds);
     RfcId = CmApi.createRfc(params);
     gs.info("Created RFC ID:"+RfcId);
     
-	})();
+  })();
 })(current, previous);]]></script>
         <sys_class_name>sys_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
@@ -65,7 +134,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>899076754fa9130081de224f9310c7be</sys_id>
-        <sys_mod_count>6</sys_mod_count>
+        <sys_mod_count>20</sys_mod_count>
         <sys_name>PushRfC</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -73,7 +142,7 @@
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_899076754fa9130081de224f9310c7be</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-19 11:44:44</sys_updated_on>
+        <sys_updated_on>2018-04-20 00:16:10</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>
