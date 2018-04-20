@@ -39,7 +39,7 @@ function sleep(ms) {
     if (current.short_description != 'Implement') {return;}
     var change_request = current.parent.getRefRecord();
     var CatalogParams = JSON.parse(change_request.implementation_plan);
-    gs.info("PARSED: "+JSON.stringify(CatalogParams));
+    //gs.info("PARSED: "+JSON.stringify(CatalogParams));
     if (!CatalogParams) {return;}
     
     var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
@@ -115,14 +115,25 @@ function sleep(ms) {
     while ( status == '' ) {
       sleep(10000);
       var Rfc = CmApi.getRfc({"RfcId":RfcId});
-      gs.info("RFC: "+JSON.stringify(Rfc));
       if (Rfc.Status.Id == 'Canceled') {
         status = Rfc.Status.Id;
         current.state = 4;
+        current.comments = "Cancel Reason: " + Rfc.StatusReason;
+      }
+      if (Rfc.Status.Id == 'Failure') {
+        status = Rfc.Status.Id;
+        current.state = 4;
+        current.comments = "Failure Reason: " + Rfc.StatusReason;
+      }
+      if (Rfc.Status.Id == 'Rejected') {
+        status = Rfc.Status.Id;
+        current.state = 4;
+        current.comments = "Rejected Reason: " + Rfc.StatusReason;
       }
       if (Rfc.Status.Id == 'Success') {
         status = Rfc.Status.Id;
         current.state = 3;
+        current.comments = "Execution Output: " + Rfc.ExecutionOutput;
       }
     }
     current.update();
@@ -136,7 +147,7 @@ function sleep(ms) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>899076754fa9130081de224f9310c7be</sys_id>
-        <sys_mod_count>41</sys_mod_count>
+        <sys_mod_count>43</sys_mod_count>
         <sys_name>PushRfC</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -144,7 +155,7 @@ function sleep(ms) {
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_899076754fa9130081de224f9310c7be</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-20 12:40:49</sys_updated_on>
+        <sys_updated_on>2018-04-20 13:41:05</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>
