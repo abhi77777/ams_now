@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database>
-    <element label="AMS Service Requests" max_length="40" name="x_195647_ams_ams_service_requests" type="collection"/>
+    <element label="AMS Service Requests" max_length="40" name="x_195647_ams_ams_service_requests" type="collection">
+        <element label="AMS Account" max_length="32" name="ams_account" reference="x_195647_ams_ams_accounts" type="reference"/>
+        <element label="Case Id" max_length="255" name="case_id" type="string"/>
+        <element label="Requested Item" max_length="32" name="req_item" reference="sc_req_item" type="reference"/>
+        <element label="Status" max_length="255" name="status" type="string"/>
+        <index name="index">
+            <element name="ams_account"/>
+        </index>
+        <index name="index2">
+            <element name="req_item"/>
+        </index>
+    </element>
 </database>
