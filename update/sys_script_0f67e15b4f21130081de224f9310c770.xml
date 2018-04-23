@@ -72,7 +72,6 @@ function createAMSCase(req_item, ams_account) {
     var ams_case_id = AMSApi.createCase(params);
     //gs.info("Created AMS Case ID: " + ams_case_id);
     
-    // insert in AMS Incidents table
     if (ams_case_id) {
       var new_service_request = new GlideRecord('x_195647_ams_ams_service_requests');
       new_service_request.initialize();
@@ -96,7 +95,6 @@ function closeAMSCase(caseId, ams_account) {
     AMSApi = new AMSIncidentAPI(creds);
     var result = AMSApi.resolveCase(caseId);
 
-    // update AMS Incidents table
     var service_request = new GlideRecord('x_195647_ams_ams_service_requests');
     service_request.addQuery('case_id','=', caseId);
     service_request.query();
@@ -110,33 +108,26 @@ function closeAMSCase(caseId, ams_account) {
 
 (function executeRule(current, previous) {
   (function push_ams_incident() {
-    if (current.short_description != current.variables.subject) {
-      current.short_description = current.variables.subject;
-      current.update();
-    }
     // creates or closes an AMS Incident.
     gs.info("PushAMSServiceRequest "+current.number+" status "+current.state);
     var service_request = new GlideRecord('x_195647_ams_ams_service_requests');
     service_request.addQuery('req_item','=', current.sys_id);
     service_request.query();
     if (service_request.next()) {
+      gs.info("PushAMSServiceRequest relation "+service_request.case_id+" status "+service_request.status);
       ams_account = service_request.ams_account.getRefRecord();
-      if (ams_account.active) {
-        if (current.state > 5) {
+      //if (ams_account.active) {
+        if (current.state > 2) {
             var result = closeAMSCase(service_request.case_id, ams_account);
         }
-      }
+      //}
     } else if (String(current.cat_item.category.sys_name) == 'AMS Service Request') {
-      gs.info("ACA VOY "+current.variables.environment);
       var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
       ams_account.addQuery('sys_id','=', current.variables.environment);
       ams_account.query();
       if (ams_account.next()) { // && ams_account.active) {
-        gs.info("TENGO ACCOUNT "+ams_account.environment_name);
         var new_ams_incident = createAMSCase(current, ams_account);
       }
-    } else {
-      gs.info("NADA Hice "+current.cat_item.category.sys_name);
     }
   })();
 })(current, previous);]]></script>
@@ -146,7 +137,7 @@ function closeAMSCase(caseId, ams_account) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>0f67e15b4f21130081de224f9310c770</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>7</sys_mod_count>
         <sys_name>PushAMSServiceRequest</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -154,9 +145,9 @@ function closeAMSCase(caseId, ams_account) {
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_0f67e15b4f21130081de224f9310c770</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-23 21:52:30</sys_updated_on>
+        <sys_updated_on>2018-04-23 23:02:33</sys_updated_on>
         <template/>
-        <when>after</when>
+        <when>async</when>
     </sys_script>
     <sys_translated_text action="delete_multiple" query="documentkey=0f67e15b4f21130081de224f9310c770"/>
 </record_update>
