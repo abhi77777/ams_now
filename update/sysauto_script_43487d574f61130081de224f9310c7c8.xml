@@ -143,7 +143,7 @@ gs.include('AMSIncidentAPI');
     ams_account.addQuery();
     ams_account.query();
     while (ams_account.next()) {
-        //if (ams_account.active) {
+        if (ams_account.active) {
             var ams_cases = getActiveCasesForAccount(ams_account);
             if (!ams_cases) {continue;}
             for (var i = 0; i < ams_cases.length; i++) {
@@ -158,28 +158,26 @@ gs.include('AMSIncidentAPI');
                     //if (req_item.state > 2) {continue;}
                     // if the req item is not created from an AMS catalog item, do not sync
                     if (String(req_item.cat_item.category.sys_name) == 'AMS Service Request') {
-                        //gs.info("Updating item: "+req_item.number +" case id "+ams_case.caseId);
                         setRequestedItemState(req_item, ams_case, service_request, ams_account);
                         updateCommunications(service_request, ams_account);
                     }
                 }
             }
-
-        //}
+        }
     }
 })();]]></script>
         <sys_class_name>sysauto_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-23 23:05:22</sys_created_on>
         <sys_id>43487d574f61130081de224f9310c7c8</sys_id>
-        <sys_mod_count>32</sys_mod_count>
+        <sys_mod_count>33</sys_mod_count>
         <sys_name>UpdateAMSServiceRequests</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sysauto_script_43487d574f61130081de224f9310c7c8</sys_update_name>
-        <sys_updated_by>abel.tuter</sys_updated_by>
-        <sys_updated_on>2018-04-24 05:59:15</sys_updated_on>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-04-24 17:46:52</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>
