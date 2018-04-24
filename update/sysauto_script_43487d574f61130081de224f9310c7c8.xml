@@ -4,7 +4,7 @@
         <active>true</active>
         <condition/>
         <conditional>false</conditional>
-        <name>AMSServiceRequestUpdater</name>
+        <name>UpdateAMSServiceRequests</name>
         <run_as display_value="System Administrator">6816f79cc0a8016401c5a33be04be441</run_as>
         <run_as_tz/>
         <run_dayofmonth>1</run_dayofmonth>
@@ -67,30 +67,30 @@ function getActiveCasesForAccount(ams_account) {
     var caseIdList = [];
     var service_request = new GlideRecord('x_195647_ams_ams_service_requests');
     //resolved is the last ams status, bt its set to closed together with the req_item to stop pulling for updates.
-    service_request.addQuery('status','!=', 'closed');
-    service_request.addQuery('ams_account','=', ams_account.sys_id);
-    // should optimize query
+    //service_request.addQuery('status','!=', 'closed');
+    service_request.addQuery('ams_account','=', String(ams_account.sys_id));
     service_request.query();
     while (service_request.next()) {
         if (service_request.case_id != '') {
             caseIdList.push(String(service_request.case_id));
         }
     }
-    //gs.info("caseIdList"+caseIdList);
+
+    //gs.info("caseIdList "+caseIdList);
 
     var params = {
         includeCommunications: true,
         includeResolvedCases: true,
-        caseIdList: caseIdList
     };
-    
+    params.caseIdList = caseIdList;
+
     if (caseIdList.length > 0) {
         var AMSApi = new AMSIncidentAPI({
             accessKeyId: String(ams_account.api_key),
             secretAccessKey: String(ams_account.secret_key)
         });
         return AMSApi.listCases(params);
-    } 
+    }
     return [];
 }
 
@@ -143,41 +143,43 @@ gs.include('AMSIncidentAPI');
     ams_account.addQuery();
     ams_account.query();
     while (ams_account.next()) {
-        if (ams_account.active) {
-            gs.info("UPDATE from account: "+ams_account.environment_name);
+        //if (ams_account.active) {
             var ams_cases = getActiveCasesForAccount(ams_account);
             if (!ams_cases) {continue;}
             for (var i = 0; i < ams_cases.length; i++) {
                 var ams_case = ams_cases[i];
+                //gs.info("Updating case id: "+ams_case.caseId);
                 var service_request = new GlideRecord('x_195647_ams_ams_service_requests');
                 service_request.addQuery('case_id','=', ams_case.caseId);
                 service_request.query();
                 while (service_request.next()) {
+                    if (!service_request.req_item) {continue;}
                     var req_item = service_request.req_item.getRefRecord();
-                    if (req_item.state > 2) {continue;}
+                    //if (req_item.state > 2) {continue;}
                     // if the req item is not created from an AMS catalog item, do not sync
                     if (String(req_item.cat_item.category.sys_name) == 'AMS Service Request') {
+                        gs.info("Updating item: "+req_item.number +" case id "+ams_case.caseId);
                         setRequestedItemState(req_item, ams_case, service_request, ams_account);
                         updateCommunications(service_request, ams_account);
                     }
                 }
             }
 
-        }
+        //}
     }
 })();]]></script>
         <sys_class_name>sysauto_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-23 23:05:22</sys_created_on>
         <sys_id>43487d574f61130081de224f9310c7c8</sys_id>
-        <sys_mod_count>1</sys_mod_count>
-        <sys_name>AMSServiceRequestUpdater</sys_name>
+        <sys_mod_count>31</sys_mod_count>
+        <sys_name>UpdateAMSServiceRequests</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sysauto_script_43487d574f61130081de224f9310c7c8</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-23 23:21:22</sys_updated_on>
+        <sys_updated_by>abel.tuter</sys_updated_by>
+        <sys_updated_on>2018-04-24 05:51:40</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>
