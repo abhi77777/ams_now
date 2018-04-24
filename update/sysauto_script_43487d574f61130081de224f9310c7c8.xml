@@ -9,10 +9,10 @@
         <run_as_tz/>
         <run_dayofmonth>1</run_dayofmonth>
         <run_dayofweek>1</run_dayofweek>
-        <run_period/>
+        <run_period>1970-01-01 00:00:10</run_period>
         <run_start>2018-04-23 23:05:01</run_start>
         <run_time>1970-01-01 08:00:00</run_time>
-        <run_type>on_demand</run_type>
+        <run_type>periodically</run_type>
         <script><![CDATA[// this script gets updates for ams req_item cases by a list of IDs.
 function getLastCommentTimeByUser(req_item_id, user_name) {
     var timestamp;
@@ -158,7 +158,7 @@ gs.include('AMSIncidentAPI');
                     //if (req_item.state > 2) {continue;}
                     // if the req item is not created from an AMS catalog item, do not sync
                     if (String(req_item.cat_item.category.sys_name) == 'AMS Service Request') {
-                        gs.info("Updating item: "+req_item.number +" case id "+ams_case.caseId);
+                        //gs.info("Updating item: "+req_item.number +" case id "+ams_case.caseId);
                         setRequestedItemState(req_item, ams_case, service_request, ams_account);
                         updateCommunications(service_request, ams_account);
                     }
@@ -172,14 +172,14 @@ gs.include('AMSIncidentAPI');
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-23 23:05:22</sys_created_on>
         <sys_id>43487d574f61130081de224f9310c7c8</sys_id>
-        <sys_mod_count>31</sys_mod_count>
+        <sys_mod_count>32</sys_mod_count>
         <sys_name>UpdateAMSServiceRequests</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sysauto_script_43487d574f61130081de224f9310c7c8</sys_update_name>
         <sys_updated_by>abel.tuter</sys_updated_by>
-        <sys_updated_on>2018-04-24 05:51:40</sys_updated_on>
+        <sys_updated_on>2018-04-24 05:59:15</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>
