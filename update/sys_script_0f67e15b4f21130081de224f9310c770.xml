@@ -19,7 +19,7 @@
         <filter_condition/>
         <is_rest>false</is_rest>
         <message/>
-        <name>PushAMSServiceRequest</name>
+        <name>CreateAMSServiceRequest</name>
         <order>100</order>
         <priority>100</priority>
         <rest_method/>
@@ -86,47 +86,20 @@ function createAMSCase(req_item, ams_account) {
 
 }
 
-function closeAMSCase(caseId, ams_account) {
-    var creds = {
-        accessKeyId: String(ams_account.api_key),
-        secretAccessKey: String(ams_account.secret_key)
-    };
-
-    AMSApi = new AMSIncidentAPI(creds);
-    var result = AMSApi.resolveCase(caseId);
-
-    var service_request = new GlideRecord('x_195647_ams_ams_service_requests');
-    service_request.addQuery('case_id','=', caseId);
-    service_request.query();
-    if (service_request.next()) {
-        service_request.status = 'resolved';
-        service_request.update();
-    }
-    return result;
-}
-
-
 (function executeRule(current, previous) {
   (function push_ams_incident() {
-    // creates or closes an AMS Incident.
-    gs.info("PushAMSServiceRequest "+current.number+" status "+current.state);
     var service_request = new GlideRecord('x_195647_ams_ams_service_requests');
     service_request.addQuery('req_item','=', current.sys_id);
     service_request.query();
-    if (service_request.next()) {
-      gs.info("PushAMSServiceRequest relation "+service_request.case_id+" status "+service_request.status);
-      ams_account = service_request.ams_account.getRefRecord();
-      //if (ams_account.active) {
-        if (current.state > 2) {
-            var result = closeAMSCase(service_request.case_id, ams_account);
-        }
-      //}
+    if (service_request.hasNext()) {
+      return;
     } else if (String(current.cat_item.category.sys_name) == 'AMS Service Request') {
       var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
       ams_account.addQuery('sys_id','=', current.variables.environment);
       ams_account.query();
       if (ams_account.next()) { // && ams_account.active) {
         var new_ams_incident = createAMSCase(current, ams_account);
+        gs.info("New Service Request "+current.number+" AMS Case ID "+new_ams_incident.case_id);
       }
     }
   })();
@@ -137,15 +110,15 @@ function closeAMSCase(caseId, ams_account) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>0f67e15b4f21130081de224f9310c770</sys_id>
-        <sys_mod_count>8</sys_mod_count>
-        <sys_name>PushAMSServiceRequest</sys_name>
+        <sys_mod_count>10</sys_mod_count>
+        <sys_name>CreateAMSServiceRequest</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_0f67e15b4f21130081de224f9310c770</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-23 23:27:28</sys_updated_on>
+        <sys_updated_on>2018-04-24 02:33:32</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>
