@@ -62,7 +62,7 @@ function createAMSCase(req_item, ams_account) {
     };
     var params = {
       communicationBody: 'AMSTestNoOpsActionRequired - ' + req_item.variables.details,
-      subject: 'AMSTestNoOpsActionRequired - ' + req_item.variables.subject,
+      subject: 'AMSTestNoOpsActionRequired - ' + '[' + req_item.number + '] ' + req_item.variables.subject,
       serviceCode: 'sentinel-service-request',
       categoryCode: mapCategoryCode(req_item.cat_item.name),
       severityCode: 'normal'
@@ -110,7 +110,7 @@ function createAMSCase(req_item, ams_account) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>0f67e15b4f21130081de224f9310c770</sys_id>
-        <sys_mod_count>11</sys_mod_count>
+        <sys_mod_count>12</sys_mod_count>
         <sys_name>CreateAMSServiceRequest</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -118,7 +118,7 @@ function createAMSCase(req_item, ams_account) {
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_0f67e15b4f21130081de224f9310c770</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-24 17:47:47</sys_updated_on>
+        <sys_updated_on>2018-04-25 10:35:32</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>
