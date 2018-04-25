@@ -24,6 +24,8 @@ AMSChangeTypesIngestion.prototype = {
       this.category_table = 'x_195647_ams_ams_change_type_categories';
       //this.variable_table = 'item_option_new';
       this.variable_table = 'x_195647_ams_ams_change_type_variables';
+      this.variable_set_table = 'item_option_new_set';
+      this.variable_set_item_table = 'io_set_item';
       //this.producer_table = 'x_195647_ams_ams_change_requests';
       this.producer_table = 'change_request';
 
@@ -36,145 +38,201 @@ AMSChangeTypesIngestion.prototype = {
       }
     },
 
+    insertItemVariables: function (schema, item, order_offset, type) {
+      var order = order_offset;
+      var properties = schema.properties;
+      var keys = Object.keys(properties);
+      for (var p = 0; p < keys.length; p++) {
+        if (properties[keys[p]].type == 'object') {
+          var set = new GlideRecord(this.variable_set_table);
+          set.initialize();
+          set.description = properties[keys[p]]['description'];
+          set.name = keys[p];
+          set.insert();
+
+          // you bloddy pig set.cat_item = item.sys_id;
+          var set_item = new GlideRecord(this.variable_set_item_table);
+          set_item.initialize();
+          set_item.sc_cat_item = item.sys_id;
+          set_item.variable_set = set.sys_id;
+          set_item.order = order + 1;
+          set_item.display_name = keys[p];
+          set_item.insert();
+          order+=1;
+          this.insertItemVariables(properties[keys[p]], set, order, 'set');
+          continue;
+        }
+
+        var variable = new GlideRecord(this.variable_table);
+        variable.initialize();
+        variable.order = order;
+        if (type == 'item') {
+          variable.cat_item = item.sys_id;
+        } 
+        else if (type == 'set') {
+          variable.variable_set = item.sys_id;
+        }
+        variable.name = keys[p];
+        variable.question_text = keys[p];
+        variable.tooltip = properties[keys[p]]['description'];
+        variable.help_text = properties[keys[p]]['description'];
+        variable.show_help = true;
+        variable.insert();
+        //gs.info("Insert variable "+variable.name +" id "+ variable.sys_id);
+        
+        if (properties[keys[p]].type == 'string') {
+          if (properties[keys[p]].hasOwnProperty('enum')) {
+            //text with choices
+            variable.type = 3;
+            variable.update();
+            var opts = properties[keys[p]]['enum'];
+            for (var o = 0; o < opts.length; o++) {
+              choice = new GlideRecord('question_choice');
+              choice.initialize();
+              choice.question = variable.sys_id;
+              choice.text = opts[o];
+              choice.display_name = opts[o];
+              choice.value = opts[o];
+              choice.insert();
+            }
+          }
+        }
+        /*if (properties[keys[p]].type == 'array') {
+          variable.initialize();
+          variable.order = order;
+          variable.cat_item = item.sys_id;
+          variable.name = keys[p];
+          variable.question_text = keys[p];
+          variable.tooltip = properties[keys[p]]['description'];
+          variable.insert();
+        }
+
+        if (properties[keys[p]].hasOwnProperty('default')) {
+          variable.default_value = properties[keys[p]]['default'];
+        }*/
+
+        if (schema.required.indexOf(keys[p]) > 0) {
+          variable.mandatory = true;
+        }
+        variable.update();
+
+        order+=1;
+        //gs.info("Insert variable"+variable.sys_id+" name "+variable.name);
+      }
+      return keys;
+    },
+
+    findOrCreateCategoryId: function(category_name, subcategory_name) {
+      // It finds or create the CT Category,Subcategory
+      var category = new GlideRecord(this.category_table);
+      category.addQuery("title", "=", category_name);
+      category.query();
+      if (!category.next()){
+        category.initialize();
+        category.title = category_name;
+        category.parent = this.catalog_category.sys_id;
+        category.insert();
+      }
+      var subcategory = new GlideRecord(this.category_table);
+      subcategory.addQuery("title", "=", subcategory_name);
+      subcategory.addQuery("parent", "=", category.sys_id);
+      subcategory.query();
+      if (!subcategory.next()){
+        subcategory.initialize();
+        subcategory.title = subcategory_name;
+        subcategory.parent = category.sys_id;
+        subcategory.insert();
+      }
+      return subcategory.sys_id;
+    },
+
+    insertStandardVariables: function(item, change_type_id, change_type_version) {
+      var variable = new GlideRecord(this.variable_table);
+      variable.initialize();
+      variable.cat_item = item.sys_id;
+      variable.name = 'Environment';
+      variable.question_text = 'Environment';
+      variable.tooltip = 'AMS Account';
+      variable.reference = 'x_195647_ams_ams_accounts';
+      variable.type = 8;
+      variable.order = 0;
+      variable.mandatory = true;
+      variable.insert();
+
+      variable = new GlideRecord(this.variable_table);
+      variable.initialize();
+      variable.cat_item = item.sys_id;
+      variable.name = 'ChangeTypeId';
+      variable.question_text = 'ChangeTypeId';
+      variable.tooltip = 'ChangeTypeId';
+      variable.default_value = change_type_id;
+      variable.order = 1;
+      variable.mandatory = true;
+      variable.insert();
+
+      variable = new GlideRecord(this.variable_table);
+      variable.initialize();
+      variable.cat_item = item.sys_id;
+      variable.name = 'ChangeTypeVersion';
+      variable.question_text = 'ChangeTypeVersion';
+      variable.tooltip = 'ChangeTypeVersion';
+      variable.default_value = change_type_version;
+      variable.order = 2;
+      variable.mandatory = true;
+      variable.insert();
+    },
+
+    ingestChangeType: function(change_type) {
+      // creates or replaces a record producer from an AMS CT.
+      var item_name = change_type.Operation +' '+ change_type.Item;
+      var item = new GlideRecord(this.catalog_item_table);
+      item.addQuery("name", "=", item_name);
+      item.query();
+      if (item.next()) {
+        item.deleteRecord();
+        gs.info("Deleted item "+item.name);
+      }
+      item.initialize();
+      item.name = item_name;
+      item.table_name = this.producer_table;
+      item.sc_catalogs = this.catalog;
+      item.category = this.findOrCreateCategoryId(change_type.Category,change_type.Subcategory);
+      try {
+        var change_type_schema = this.amscm.getChangeTypeVersion({ChangeTypeId: String(change_type.ChangeTypeId)});
+        if (change_type_schema) {
+          var execution_input_schema = JSON.parse(change_type_schema.ExecutionInputSchema);
+          item.short_description = execution_input_schema.description;
+          item.insert();
+          this.insertStandardVariables(item, change_type.ChangeTypeId, change_type_schema.Version);
+          var schema_parameters = this.insertItemVariables(execution_input_schema, item, 10, 'item');
+          //var schema_parameters = [];
+          vars = '["' + schema_parameters.join('","') + '"]';
+          item.script =  'var variables = '+ vars+';gs.include("AMSRfcGenerator");generator = new AMSRfcGenerator();current.implementation_plan = generator.generate_rfc_object(producer);var ams_account = new GlideRecord("x_195647_ams_ams_accounts");ams_account.addQuery("sys_id", "=", producer.Environment);ams_account.query();if (ams_account.next()) { current.short_description = "[" + ams_account.environment_name + "] - " + producer.name;}';
+          item.update();
+          gs.info("Insert CT " + change_type.ChangeTypeId + ", Item Name: " + item.name + ", Category "+ item.category.sys_name +", Item Id "+item.sys_id);
+        } else {
+          gs.info("Ignoring private CT Id: " + change_type.ChangeTypeId);
+        }
+      } 
+      catch(err) {
+        gs.info("Error processing ct "+item.change_type_id + " message "+err.message);
+      }
+    },
+
     ingestChangeTypes: function () {
       // creates catalogItems in this.catalog from an array of AMS change types
       // the array is the one produced by AMSChangeManagementAPI.getChangeTypeIds
       var change_types = this.amscm.getChangeTypeIds();
+      //gs.info("CT "+JSON.stringify(change_types));
+      /*var change_types = [{
+        Category: 'Deployment',
+        Subcategory: 'Advanced stack components',
+        Item: 'Application Load Balancer',
+        Operation: 'Create',
+        ChangeTypeId: 'ct-111r1yayblnw4'
+      }];*/
       for (var i = 0; i < change_types.length; i++) {
-        var item = new GlideRecord(this.catalog_item_table);
-        //this does not work with sc_cat_item_producer record producer table.
-        //item.addQuery("change_type_id", "=", change_types[i].ChangeTypeId);
-        item.addQuery("name", "=", change_types[i].Operation +' '+ change_types[i].Item);
-        item.query();
-        if (item.next()) {
-          item.deleteRecord();
-          gs.info("Deleted item"+item.name);
-        }
-        item.initialize();
-        item.name = change_types[i].Operation +' '+ change_types[i].Item;
-
-        // if I use the sc_cat_item_producer table, I can't store permanently the ID
-        item.change_type_id = change_types[i].ChangeTypeId;
-
-        item.table_name = this.producer_table;
-        item.sc_catalogs = this.catalog;
-        item.ignore_price = true;
-        
-        //item.no_quantity = true;
-        //item.billable = false;
-        //item.can_cancel = true;
-
-        // It finds or create the CT Category,subcategory
-        var category = new GlideRecord(this.category_table);
-        category.addQuery("title", "=", change_types[i].Category);
-        category.query();
-        if (!category.next()){
-          category.initialize();
-          category.title = change_types[i].Category;
-          category.parent = this.catalog_category.sys_id;
-          category.insert();
-          //gs.info("NEW Category: "+category.sys_id);
-        }
-        var sub_category = new GlideRecord(this.category_table);
-        sub_category.addQuery("title", "=", change_types[i].Subcategory);
-        sub_category.addQuery("parent", "=", category.sys_id);
-        sub_category.query();
-        if (!sub_category.next()){
-          sub_category.initialize();
-          sub_category.title = change_types[i].Subcategory;
-          sub_category.parent = category.sys_id;
-          sub_category.insert();
-          //gs.info("NEW SUB Category: "+sub_category.sys_id);
-        }
-        item.category = sub_category.sys_id;
-
-        try {
-          var change_type_schema = this.amscm.getChangeTypeVersion({ChangeTypeId: String(item.change_type_id)});
-          if (change_type_schema) {
-            var execution_input_schema = JSON.parse(change_type_schema.ExecutionInputSchema);
-            var schema_properties_keys = Object.keys(execution_input_schema.properties);
-            //gs.info("CT Properties " + JSON.stringify(schema_properties_keys) + " CT ID " + item.change_type_id);
-            
-
-
-            item.short_description = execution_input_schema.description;
-            item.insert();
-            gs.info("Insert CT " + item.sys_id + " ct id " + item.name + " category "+ item.category);
-
-            // variables:
-            // goes and gets the schema with getChangeTypeVersion
-            // iterates the schema and create variables for each attribute of ExecutionInputSchema
-            //gs.info("CT ID " + item.change_type_id);
-            //gs.info("SCHEMA" + JSON.stringify(change_type_schema));
-
-            //insert the change type id and version as variables in the producer
-            
-            var variable = new GlideRecord(this.variable_table);
-            variable.initialize();
-            variable.cat_item = item.sys_id;
-            variable.name = 'Environment';
-            variable.question_text = 'Environment';
-            variable.tooltip = 'AMS Account';
-            variable.reference = 'x_195647_ams_ams_accounts';
-            variable.type = 8;
-            variable.order = 0;
-            variable.insert();
-
-            variable = new GlideRecord(this.variable_table);
-            variable.initialize();
-            variable.cat_item = item.sys_id;
-            variable.name = 'ChangeTypeId';
-            variable.question_text = 'ChangeTypeId';
-            variable.tooltip = 'ChangeTypeId';
-            variable.default_value = change_types[i].ChangeTypeId;
-            variable.order = 1;
-            variable.insert();
-
-            variable = new GlideRecord(this.variable_table);
-            variable.initialize();
-            variable.cat_item = item.sys_id;
-            variable.name = 'ChangeTypeVersion';
-            variable.question_text = 'ChangeTypeVersion';
-            variable.tooltip = 'ChangeTypeVersion';
-            variable.default_value = change_type_schema.Version;
-            variable.order = 2;
-            variable.insert();
-
-            var order = 3;
-            for (var p = 0; p < schema_properties_keys.length; p++) {
-              //gs.info("quiero meter variable"+schema_properties_keys[p]);
-              variable = new GlideRecord(this.variable_table);
-              variable.initialize();
-              variable.order = order;
-              variable.cat_item = item.sys_id;
-              variable.name = schema_properties_keys[p];
-              variable.question_text = schema_properties_keys[p];
-              variable.tooltip = execution_input_schema.properties[schema_properties_keys[p]]['description'];
-              if (execution_input_schema.properties[schema_properties_keys[p]].hasOwnProperty('enum')) {
-                variable.default_value = execution_input_schema.properties[schema_properties_keys[p]]['enum'][0];
-              }
-              if (execution_input_schema.properties[schema_properties_keys[p]].hasOwnProperty('default')) {
-                variable.default_value = execution_input_schema.properties[schema_properties_keys[p]]['default'];
-              }
-
-              if (execution_input_schema.required.indexOf(schema_properties_keys[p]) > 0) {
-                variable.mandatory = true;
-              }
-              variable.insert();
-              order+=1;
-              //gs.info("Insert variable"+variable.sys_id+" name "+variable.name);
-            }
-            vars = '["' + schema_properties_keys.join('","') + '"]';
-            item.script =  'var variables = '+ vars+';var Params = {};var RfcParameters = {};Params.EnvironmentId = String(producer.Environment);RfcParameters.ChangeTypeId = String(producer.ChangeTypeId);RfcParameters.ChangeTypeVersion = String(producer.ChangeTypeVersion);ExecutionParameters = {};for (var i = 0; i < variables.length; i++) { if (producer[variables[i]] && producer[variables[i]] != "") {   ExecutionParameters[variables[i]] = String(producer[variables[i]]); }};RfcParameters.ExecutionParameters = JSON.stringify(ExecutionParameters);Params.RfcParameters = RfcParameters;current.implementation_plan = JSON.stringify(Params);var ams_account = new GlideRecord("x_195647_ams_ams_accounts");ams_account.addQuery("sys_id", "=", producer.Environment);ams_account.query();if (ams_account.next()) { current.short_description = "[" + ams_account.environment_name + "] - " + producer.name;};';
-            item.update();
-            //break;
-          }
-        }
-        catch(err) {
-          gs.info("Error processing ct "+item.change_type_id + " message "+err.message);
-          //break;
-          continue;
-        }
+        var item = this.ingestChangeType(change_types[i]);
       }
     },
 
@@ -184,13 +242,13 @@ AMSChangeTypesIngestion.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 21:56:25</sys_created_on>
         <sys_id>0965371bdb1d13004becfabdbf961988</sys_id>
-        <sys_mod_count>59</sys_mod_count>
+        <sys_mod_count>60</sys_mod_count>
         <sys_name>AMSChangeTypesIngestion</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_0965371bdb1d13004becfabdbf961988</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-20 16:37:11</sys_updated_on>
+        <sys_updated_on>2018-04-25 07:47:28</sys_updated_on>
     </sys_script_include>
 </record_update>

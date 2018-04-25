@@ -26,12 +26,12 @@ AMSChangeManagementAPI.prototype = {
     },
 
     listChangeTypeSubCategories: function (params) {
-    	/*{
-		    "Category": "", 
-		    "Locale": "", 
-		    "MaxResults": 0, 
-		    "NextToken": ""
-			}*/
+      /*{
+        "Category": "", 
+        "Locale": "", 
+        "MaxResults": 0, 
+        "NextToken": ""
+      }*/
 
       var request = this._build_request(params, 'ListChangeTypeSubcategories');
       response = request.execute();
@@ -43,14 +43,14 @@ AMSChangeManagementAPI.prototype = {
     },
 
     listChangeTypeItems: function (params) {
-    	/*{
-		    "Category": "", 
-		    "Locale": "", 
-		    "MaxResults": 0, 
-		    "NextToken": "", 
-		    "Subcategory": ""
-			}*/
-			
+      /*{
+        "Category": "", 
+        "Locale": "", 
+        "MaxResults": 0, 
+        "NextToken": "", 
+        "Subcategory": ""
+      }*/
+      
       var request = this._build_request(params, 'ListChangeTypeItems');
       response = request.execute();
       if (response.haveError()) {
@@ -61,14 +61,14 @@ AMSChangeManagementAPI.prototype = {
     },
 
     listChangeTypeOperations: function (params) {
-    	/*{
-		    "Category": "", 
-		    "Locale": "", 
-		    "Item": "", 
-		    "MaxResults": 0, 
-		    "NextToken": "", 
-		    "Subcategory": ""
-			}*/
+      /*{
+        "Category": "", 
+        "Locale": "", 
+        "Item": "", 
+        "MaxResults": 0, 
+        "NextToken": "", 
+        "Subcategory": ""
+      }*/
 
       var request = this._build_request(params, 'ListChangeTypeOperations');
       response = request.execute();
@@ -80,54 +80,57 @@ AMSChangeManagementAPI.prototype = {
     },
 
     getChangeTypeIds: function () {
-    	// iterate over category/subcategory/item/operation to list all change type ids.
-    	// returns array of objects with category/subcategory/item/operation+change_id
-    	// its very slow, use with caution
-    	var params;
-			var change_type_list = [];
-			var categories = this.listChangeTypeCategories();
-			for (var c = 0; c < categories.length; c++) {
-				params = {
-					Category: categories[c]
-				};
-				
-				var subcategories = this.listChangeTypeSubCategories(params);
-				for (var s = 0; s < subcategories.length; s++) {
-					params = {
-						Category: categories[c],
-						Subcategory: subcategories[s]
-					};
-					
-					var items = this.listChangeTypeItems(params);
-					for (var i = 0; i < items.length; i++) {
-						params = {
-							Category: categories[c],
-							Subcategory: subcategories[s],
-							Item: items[i]
-						};
-						
-						var operations = this.listChangeTypeOperations(params);
-						for (var o = 0; o < operations.length; o++) {
-							change_type_list.push({
-								Category: categories[c],
-								Subcategory: subcategories[s],
-								Item: items[i],
-								Operation: operations[o].Operation,
-								ChangeTypeId: operations[o].ChangeTypeId
-							});
-						}
-					}
-				}
-			}
+      // iterate over category/subcategory/item/operation to list all change type ids.
+      // returns array of objects with category/subcategory/item/operation+change_id
+      // its very slow, use with caution
+      var params;
+      var change_type_list = [];
+      var categories = this.listChangeTypeCategories();
+      for (var c = 0; c < categories.length; c++) {
+        params = {
+          Category: categories[c]
+        };
+        
+        var subcategories = this.listChangeTypeSubCategories(params);
+        if (!subcategories) {continue;}
+        for (var s = 0; s < subcategories.length; s++) {
+          params = {
+            Category: categories[c],
+            Subcategory: subcategories[s]
+          };
+          
+          var items = this.listChangeTypeItems(params);
+          if (!items) {continue;}
+          for (var i = 0; i < items.length; i++) {
+            params = {
+              Category: categories[c],
+              Subcategory: subcategories[s],
+              Item: items[i]
+            };
+            
+            var operations = this.listChangeTypeOperations(params);
+            if (!operations) {continue;}
+            for (var o = 0; o < operations.length; o++) {
+              change_type_list.push({
+                Category: categories[c],
+                Subcategory: subcategories[s],
+                Item: items[i],
+                Operation: operations[o].Operation,
+                ChangeTypeId: operations[o].ChangeTypeId
+              });
+            }
+          }
+        }
+      }
       return change_type_list;
     },
 
     getChangeTypeVersion: function (params) {
-    	/*{
-		    "ChangeTypeId": "", 
-		    "Locale": "", 
-		    "Version": ""
-			}*/
+      /*{
+        "ChangeTypeId": "", 
+        "Locale": "", 
+        "Version": ""
+      }*/
 
       var request = this._build_request(params, 'GetChangeTypeVersion');
       response = request.execute();
@@ -139,19 +142,19 @@ AMSChangeManagementAPI.prototype = {
     },
 
     createRfc: function (params) {
-    	/*{
-				"ChangeTypeId": "", 
-				"ChangeTypeVersion": "", 
-				"Description": "", 
-				"ExecutionParameters": "", 
-				"ExpectedOutcome": "", 
-				"ImplementationPlan": "", 
-				"RequestedEndTime": "", 
-				"RequestedStartTime": "", 
-				"RollbackPlan": "", 
-				"Title": "", 
-				"WorstCaseScenario": ""
-			}*/
+      /*{
+        "ChangeTypeId": "", 
+        "ChangeTypeVersion": "", 
+        "Description": "", 
+        "ExecutionParameters": "", 
+        "ExpectedOutcome": "", 
+        "ImplementationPlan": "", 
+        "RequestedEndTime": "", 
+        "RequestedStartTime": "", 
+        "RollbackPlan": "", 
+        "Title": "", 
+        "WorstCaseScenario": ""
+      }*/
 
       var request = this._build_request(params, 'CreateRfc');
       response = request.execute();
@@ -163,10 +166,10 @@ AMSChangeManagementAPI.prototype = {
     },
 
     submitRfc: function (params) {
-    	/*{
-		    "RestrictedExecutionTimesOverrideId": "", 
-		    "RfcId": ""
-			}*/
+      /*{
+        "RestrictedExecutionTimesOverrideId": "", 
+        "RfcId": ""
+      }*/
 
       var request = this._build_request(params, 'SubmitRfc');
       response = request.execute();
@@ -178,9 +181,9 @@ AMSChangeManagementAPI.prototype = {
     },
 
     approveRfc: function (params) {
-    	/*{
-		    "RfcId": ""
-			}*/
+      /*{
+        "RfcId": ""
+      }*/
 
       var request = this._build_request(params, 'ApproveRfc');
       response = request.execute();
@@ -192,10 +195,10 @@ AMSChangeManagementAPI.prototype = {
     },
 
     cancelRfc: function (params) {
-    	/*{
-		    "Reason": "", 
-		    "RfcId": ""
-			}*/
+      /*{
+        "Reason": "", 
+        "RfcId": ""
+      }*/
 
       var request = this._build_request(params, 'CancelRfc');
       response = request.execute();
@@ -207,10 +210,10 @@ AMSChangeManagementAPI.prototype = {
     },
 
     getRfc: function (params) {
-    	/*{
-		    "RfcId": "", 
-		    "Locale": ""
-			}*/
+      /*{
+        "RfcId": "", 
+        "Locale": ""
+      }*/
 
       var request = this._build_request(params, 'GetRfc');
       response = request.execute();
@@ -243,6 +246,7 @@ AMSChangeManagementAPI.prototype = {
         request.setRequestHeader('X-Amz-Date', signature.headers['X-Amz-Date']);
         request.setRequestHeader('User-Agent', signature.headers['User-Agent']);
         request.setRequestBody(opts.body);
+        //gs.info("PARAMS: "+JSON.stringify(opts));
         return request;
     },
 
@@ -259,13 +263,13 @@ AMSChangeManagementAPI.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 14:41:11</sys_created_on>
         <sys_id>ded15edbdb1913004becfabdbf9619aa</sys_id>
-        <sys_mod_count>20</sys_mod_count>
+        <sys_mod_count>21</sys_mod_count>
         <sys_name>AMSChangeManagementAPI</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_ded15edbdb1913004becfabdbf9619aa</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-20 13:21:45</sys_updated_on>
+        <sys_updated_on>2018-04-25 07:49:43</sys_updated_on>
     </sys_script_include>
 </record_update>

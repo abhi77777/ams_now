@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_195647_ams.AMSRfcGenerator</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>AMSRfcGenerator</name>
+        <script><![CDATA[var AMSRfcGenerator = Class.create();
+AMSRfcGenerator.prototype = {
+    initialize: function() {
+    },
+    generate_rfc_object: function(producer) {
+      var items = {};
+      var keys = Object.keys(producer);
+      for (var i = 0; i < keys.length; i++) {
+       if (keys[i].match(/^IO/)) {
+          var sys_id = keys[i].replace(/^IO/,"");
+          cat_var = new GlideRecord('x_195647_ams_ams_change_type_variables');
+          cat_var.addQuery("sys_id", "=", sys_id);
+          cat_var.query();
+          if (cat_var.next()) {
+            items[producer[keys[i]]] = cat_var.name;      
+          }
+       }
+      }
+
+      var Params = {};
+      var RfcParameters = {};
+      Params.EnvironmentId = String(producer.Environment);
+      RfcParameters.ChangeTypeId = String(producer.ChangeTypeId);
+      RfcParameters.ChangeTypeVersion = String(producer.ChangeTypeVersion);
+      ExecutionParameters = {};
+      for (var i = 0; i < variables.length; i++) { 
+        if (producer[variables[i]] && producer[variables[i]] != "") {
+          if (items[producer[variables[i]]] == 'StackIds') {
+            ExecutionParameters[variables[i]] = String(producer[variables[i]]).split(",");
+          } else if (items[producer[variables[i]]] == 'TimeRequestedInHours') {
+            ExecutionParameters[variables[i]] = Number(producer[variables[i]]);
+          } else {
+            ExecutionParameters[variables[i]] = String(producer[variables[i]]);
+          }
+       }
+      }
+      RfcParameters.ExecutionParameters = JSON.stringify(ExecutionParameters);
+      Params.RfcParameters = RfcParameters;
+      return JSON.stringify(Params);      
+    },
+
+    type: 'AMSRfcGenerator'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-04-25 07:47:50</sys_created_on>
+        <sys_id>0c8970b7db21130030b0dec0cf9619dd</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>AMSRfcGenerator</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sys_script_include_0c8970b7db21130030b0dec0cf9619dd</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-04-25 07:47:50</sys_updated_on>
+    </sys_script_include>
+</record_update>
