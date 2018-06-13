@@ -15,7 +15,7 @@
         <mobile_subcategory_render_type>list</mobile_subcategory_render_type>
         <module/>
         <order>0</order>
-        <parent display_value="Amazon Managed Services">155523c74f61130081de224f9310c753</parent>
+        <parent display_value="AWS Managed Services">155523c74f61130081de224f9310c753</parent>
         <roles/>
         <sc_catalog display_value="Service Catalog">e0d08b13c3330100c8b837659bba8fb4</sc_catalog>
         <show_in_cms>false</show_in_cms>

@@ -23,15 +23,15 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-23 12:24:00</sys_created_on>
         <sys_id>155523c74f61130081de224f9310c753</sys_id>
-        <sys_mod_count>0</sys_mod_count>
-        <sys_name>Amazon Managed Services</sys_name>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>AWS Managed Services</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sc_category_155523c74f61130081de224f9310c753</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-23 12:24:00</sys_updated_on>
-        <title>Amazon Managed Services</title>
+        <sys_updated_on>2018-06-13 10:52:17</sys_updated_on>
+        <title>AWS Managed Services</title>
     </sc_category>
     <sys_translated_text action="delete_multiple" query="documentkey=155523c74f61130081de224f9310c753"/>
     <sys_attachment action="INSERT_OR_UPDATE">
