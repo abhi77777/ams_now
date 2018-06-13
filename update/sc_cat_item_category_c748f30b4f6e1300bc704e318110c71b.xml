@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sc_cat_item_category">
+    <sc_cat_item_category action="INSERT_OR_UPDATE">
+        <sc_cat_item display_value="Create Other">8f48f30b4f6e1300bc704e318110c715</sc_cat_item>
+        <sc_category display_value="Other">1082f04b4f221300bc704e318110c770</sc_category>
+        <sys_class_name>sc_cat_item_category</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-06-12 06:48:34</sys_created_on>
+        <sys_id>c748f30b4f6e1300bc704e318110c71b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Other.Create Other</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sc_cat_item_category_c748f30b4f6e1300bc704e318110c71b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-06-12 06:48:34</sys_updated_on>
+    </sc_cat_item_category>
+</record_update>

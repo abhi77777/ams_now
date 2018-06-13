@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sc_cat_item_category">
+    <sc_cat_item_category action="INSERT_OR_UPDATE">
+        <sc_cat_item display_value="Create DNS (private)">49b737474f6e1300bc704e318110c7f7</sc_cat_item>
+        <sc_category display_value="Advanced stack components">92e1b8874f221300bc704e318110c727</sc_category>
+        <sys_class_name>sc_cat_item_category</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-06-12 06:45:58</sys_created_on>
+        <sys_id>49b777474f6e1300bc704e318110c709</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Advanced stack components.Create DNS (private)</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sc_cat_item_category_49b777474f6e1300bc704e318110c709</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-06-12 06:45:58</sys_updated_on>
+    </sc_cat_item_category>
+</record_update>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="io_set_item">
+    <io_set_item action="INSERT_OR_UPDATE">
+        <order>17</order>
+        <sc_cat_item display_value="Create High availability one-tier stack">32e7fb874f6e1300bc704e318110c78e</sc_cat_item>
+        <sys_class_name>io_set_item</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-06-12 06:46:56</sys_created_on>
+        <sys_id>9fe73f874f6e1300bc704e318110c71b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>ApplicationLoadBalancer.Create High availability one-tier stack</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>io_set_item_9fe73f874f6e1300bc704e318110c71b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-06-12 06:46:56</sys_updated_on>
+        <variable_set display_value="ApplicationLoadBalancer">8be73f874f6e1300bc704e318110c71a</variable_set>
+    </io_set_item>
+</record_update>
