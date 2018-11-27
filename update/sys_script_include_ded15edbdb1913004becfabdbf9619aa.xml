@@ -13,7 +13,6 @@ AMSChangeManagementAPI.prototype = {
       this.endpoint = 'https://amscm.us-east-1.amazonaws.com/';
     },
 
-    //meta-program all this ffs.
     listChangeTypeCategories: function () {
       var response = this._execute_request({}, 'ListChangeTypeCategories');
       return response.ChangeTypeCategories;
@@ -170,41 +169,41 @@ AMSChangeManagementAPI.prototype = {
     },
 
     _execute_request: function(params, action) {
-        var opts = {
-            service : 'amscm',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-amz-json-1.1',
-                'X-Amz-Target': 'AWSEnergonService.',
-                'User-Agent'  : ''
-            }
-        };
-        opts.headers['X-Amz-Target'] += action;
-        opts.body = JSON.stringify(params);
-        var signature = AWSSignUtil.sign(opts, this.creds);
-        var request = new sn_ws.RESTMessageV2();
-        request.setHttpMethod(opts.method);
-        request.setEndpoint(this.endpoint);
-        request.setRequestHeader('Content-Type', opts.headers['Content-Type']);
-        request.setRequestHeader('X-Amz-Target', opts.headers['X-Amz-Target']);
-        request.setRequestHeader('Authorization', signature.headers.Authorization);
-        request.setRequestHeader('X-Amz-Date', signature.headers['X-Amz-Date']);
-        request.setRequestHeader('User-Agent', signature.headers['User-Agent']);
-        request.setRequestBody(opts.body);
-        // Uncomment to log request posted to AWS.
-        //gs.info("AWS API REQ PARAMS: "+JSON.stringify(opts));
-        var response = request.execute();
-        if (response.haveError()) {
-            gs.error("AMSCM API request error." +
-                " Error Code: " + response.getErrorCode() +
-                " Message: " + response.getErrorMessage() +
-                " Status Code: "+ response.getStatusCode() +
-                " Response Body: "+ response.getBody());
-            //throw response.getErrorCode;
-            return false;
-        } else {
-            return JSON.parse(response.getBody());
-        }
+      var opts = {
+          service : 'amscm',
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-amz-json-1.1',
+              'X-Amz-Target': 'AWSEnergonService.',
+              'User-Agent'  : ''
+          }
+      };
+      opts.headers['X-Amz-Target'] += action;
+      opts.body = JSON.stringify(params);
+      var signature = AWSSignUtil.sign(opts, this.creds);
+      var request = new sn_ws.RESTMessageV2();
+      request.setHttpMethod(opts.method);
+      request.setEndpoint(this.endpoint);
+      request.setRequestHeader('Content-Type', opts.headers['Content-Type']);
+      request.setRequestHeader('X-Amz-Target', opts.headers['X-Amz-Target']);
+      request.setRequestHeader('Authorization', signature.headers.Authorization);
+      request.setRequestHeader('X-Amz-Date', signature.headers['X-Amz-Date']);
+      request.setRequestHeader('User-Agent', signature.headers['User-Agent']);
+      request.setRequestBody(opts.body);
+      // Uncomment to log request posted to AWS.
+      //gs.info("AWS API REQ PARAMS: "+JSON.stringify(opts));
+      var response = request.execute();
+      if (response.haveError()) {
+          gs.error("AMSCM API request error." +
+              " Error Code: "    + response.getErrorCode() +
+              " Message: "       + response.getErrorMessage() +
+              " Status Code: "   + response.getStatusCode() +
+              " Response Body: " + response.getBody());
+          //throw response.getErrorCode;
+          return false;
+      } else {
+          return JSON.parse(response.getBody());
+      }
     },
 
     _extend: function extend(obj, src) {
@@ -220,13 +219,13 @@ AMSChangeManagementAPI.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 14:41:11</sys_created_on>
         <sys_id>ded15edbdb1913004becfabdbf9619aa</sys_id>
-        <sys_mod_count>25</sys_mod_count>
+        <sys_mod_count>27</sys_mod_count>
         <sys_name>AMSChangeManagementAPI</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_ded15edbdb1913004becfabdbf9619aa</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-27 11:30:57</sys_updated_on>
+        <sys_updated_on>2018-11-27 11:57:15</sys_updated_on>
     </sys_script_include>
 </record_update>

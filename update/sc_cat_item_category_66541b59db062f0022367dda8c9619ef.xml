@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sc_cat_item_category">
+    <sc_cat_item_category action="INSERT_OR_UPDATE">
+        <sc_cat_item display_value="Create IAM instance profile">e2541b59db062f0022367dda8c9619dc</sc_cat_item>
+        <sc_category display_value="Applications">e5203b49dbc6eb0022367dda8c961908</sc_category>
+        <sys_class_name>sc_cat_item_category</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-27 17:21:55</sys_created_on>
+        <sys_id>66541b59db062f0022367dda8c9619ef</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Applications.Create IAM instance profile</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sc_cat_item_category_66541b59db062f0022367dda8c9619ef</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-27 17:21:55</sys_updated_on>
+    </sc_cat_item_category>
+</record_update>

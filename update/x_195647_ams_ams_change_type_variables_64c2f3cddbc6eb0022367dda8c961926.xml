@@ -2,7 +2,7 @@
     <x_195647_ams_ams_change_type_variables action="INSERT_OR_UPDATE">
         <active>true</active>
         <attributes/>
-        <cat_item display_value="Create (for EC2 instance) CodeDeploy deployment group">dcc2b3cddbc6eb0022367dda8c9619f0</cat_item>
+        <cat_item/>
         <category/>
         <choice_direction>down</choice_direction>
         <choice_field/>

@@ -2,7 +2,7 @@
     <x_195647_ams_ams_change_type_variables action="INSERT_OR_UPDATE">
         <active>true</active>
         <attributes/>
-        <cat_item display_value="Grant Stack admin access">fee2bfcddbc6eb0022367dda8c961911</cat_item>
+        <cat_item/>
         <category/>
         <choice_direction>down</choice_direction>
         <choice_field/>
@@ -59,14 +59,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-11-27 00:56:58</sys_created_on>
         <sys_id>32e2ffcddbc6eb0022367dda8c96198e</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_name>ChangeTypeId</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy/>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>x_195647_ams_ams_change_type_variables_32e2ffcddbc6eb0022367dda8c96198e</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-27 00:56:58</sys_updated_on>
+        <sys_updated_on>2018-11-27 15:18:52</sys_updated_on>
         <table/>
         <tooltip>ChangeTypeId</tooltip>
         <type>6</type>
