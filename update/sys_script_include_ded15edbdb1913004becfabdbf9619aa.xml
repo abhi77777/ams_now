@@ -15,13 +15,8 @@ AMSChangeManagementAPI.prototype = {
 
     //meta-program all this ffs.
     listChangeTypeCategories: function () {
-      var request = this._build_request({}, 'ListChangeTypeCategories');
-      response = request.execute();
-      if (response.haveError()) {
-          gs.error(response.getErrorMessage());
-      } else {
-          return JSON.parse(response.getBody()).ChangeTypeCategories;
-      }
+      var response = this._execute_request({}, 'ListChangeTypeCategories');
+      return response.ChangeTypeCategories;
     },
 
     listChangeTypeSubCategories: function (params) {
@@ -31,14 +26,8 @@ AMSChangeManagementAPI.prototype = {
         "MaxResults": 0, 
         "NextToken": ""
       }*/
-
-      var request = this._build_request(params, 'ListChangeTypeSubcategories');
-      response = request.execute();
-      if (response.haveError()) {
-          gs.error(response.getErrorMessage());
-      } else {
-          return JSON.parse(response.getBody()).ChangeTypeSubcategories;
-      }
+      var response = this._execute_request(params, 'ListChangeTypeSubcategories');
+      return response.ChangeTypeSubcategories;
     },
 
     listChangeTypeItems: function (params) {
@@ -50,13 +39,8 @@ AMSChangeManagementAPI.prototype = {
         "Subcategory": ""
       }*/
       
-      var request = this._build_request(params, 'ListChangeTypeItems');
-      response = request.execute();
-      if (response.haveError()) {
-          gs.error(response.getErrorMessage());
-      } else {
-          return JSON.parse(response.getBody()).ChangeTypeItems;
-      }
+      var response = this._execute_request(params, 'ListChangeTypeItems');
+      return response.ChangeTypeItems;
     },
 
     listChangeTypeOperations: function (params) {
@@ -69,13 +53,8 @@ AMSChangeManagementAPI.prototype = {
         "Subcategory": ""
       }*/
 
-      var request = this._build_request(params, 'ListChangeTypeOperations');
-      response = request.execute();
-      if (response.haveError()) {
-          gs.error(response.getErrorMessage());
-      } else {
-          return JSON.parse(response.getBody()).ChangeTypeOperationSummaries;
-      }
+      var response = this._execute_request(params, 'ListChangeTypeOperations');
+      return response.ChangeTypeOperationSummaries;
     },
 
     getChangeTypeIds: function () {
@@ -131,13 +110,8 @@ AMSChangeManagementAPI.prototype = {
         "Version": ""
       }*/
 
-      var request = this._build_request(params, 'GetChangeTypeVersion');
-      response = request.execute();
-      if (response.haveError()) {
-          gs.error(response.getErrorMessage());
-      } else {
-          return JSON.parse(response.getBody()).ChangeTypeVersion;
-      }
+      var response = this._execute_request(params, 'GetChangeTypeVersion');
+      return response.ChangeTypeVersion;
     },
 
     createRfc: function (params) {
@@ -155,13 +129,8 @@ AMSChangeManagementAPI.prototype = {
         "WorstCaseScenario": ""
       }*/
 
-      var request = this._build_request(params, 'CreateRfc');
-      response = request.execute();
-      if (response.haveError()) {
-          gs.error(response.getErrorMessage());
-      } else {
-          return JSON.parse(response.getBody()).RfcId;
-      }
+      var response = this._execute_request(params, 'CreateRfc');
+      return response.RfcId;
     },
 
     submitRfc: function (params) {
@@ -170,13 +139,7 @@ AMSChangeManagementAPI.prototype = {
         "RfcId": ""
       }*/
 
-      var request = this._build_request(params, 'SubmitRfc');
-      response = request.execute();
-      if (response.haveError()) {
-          gs.error(response.getErrorMessage());
-      } else {
-          return JSON.parse(response.getBody());
-      }
+      return this._execute_request(params, 'SubmitRfc');
     },
 
     approveRfc: function (params) {
@@ -184,13 +147,7 @@ AMSChangeManagementAPI.prototype = {
         "RfcId": ""
       }*/
 
-      var request = this._build_request(params, 'ApproveRfc');
-      response = request.execute();
-      if (response.haveError()) {
-          gs.error(response.getErrorMessage());
-      } else {
-          return JSON.parse(response.getBody());
-      }
+      return this._execute_request(params, 'ApproveRfc');
     },
 
     cancelRfc: function (params) {
@@ -199,13 +156,7 @@ AMSChangeManagementAPI.prototype = {
         "RfcId": ""
       }*/
 
-      var request = this._build_request(params, 'CancelRfc');
-      response = request.execute();
-      if (response.haveError()) {
-          gs.error(response.getErrorMessage());
-      } else {
-          return JSON.parse(response.getBody());
-      }
+      return this._execute_request(params, 'CancelRfc');
     },
 
     getRfc: function (params) {
@@ -214,18 +165,13 @@ AMSChangeManagementAPI.prototype = {
         "Locale": ""
       }*/
 
-      var request = this._build_request(params, 'GetRfc');
-      response = request.execute();
-      if (response.haveError()) {
-          gs.error(response.getErrorMessage());
-      } else {
-          return JSON.parse(response.getBody()).Rfc;
-      }
+      var response = this._execute_request(params, 'GetRfc');
+      return response.Rfc;
     },
 
-    _build_request: function(params, action) {
+    _execute_request: function(params, action) {
         var opts = {
-            service : 'amscm', // 'AWSSupport_20130415.',
+            service : 'amscm',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-amz-json-1.1',
@@ -245,8 +191,20 @@ AMSChangeManagementAPI.prototype = {
         request.setRequestHeader('X-Amz-Date', signature.headers['X-Amz-Date']);
         request.setRequestHeader('User-Agent', signature.headers['User-Agent']);
         request.setRequestBody(opts.body);
-        //gs.info("PARAMS: "+JSON.stringify(opts));
-        return request;
+        // Uncomment to log request posted to AWS.
+        //gs.info("AWS API REQ PARAMS: "+JSON.stringify(opts));
+        var response = request.execute();
+        if (response.haveError()) {
+            gs.error("AMSCM API request error." +
+                " Error Code: " + response.getErrorCode() +
+                " Message: " + response.getErrorMessage() +
+                " Status Code: "+ response.getStatusCode() +
+                " Response Body: "+ response.getBody());
+            //throw response.getErrorCode;
+            return false;
+        } else {
+            return JSON.parse(response.getBody());
+        }
     },
 
     _extend: function extend(obj, src) {
@@ -262,13 +220,13 @@ AMSChangeManagementAPI.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 14:41:11</sys_created_on>
         <sys_id>ded15edbdb1913004becfabdbf9619aa</sys_id>
-        <sys_mod_count>21</sys_mod_count>
+        <sys_mod_count>25</sys_mod_count>
         <sys_name>AMSChangeManagementAPI</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_ded15edbdb1913004becfabdbf9619aa</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-25 07:49:43</sys_updated_on>
+        <sys_updated_on>2018-11-27 11:30:57</sys_updated_on>
     </sys_script_include>
 </record_update>

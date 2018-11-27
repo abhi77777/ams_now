@@ -2,17 +2,7 @@
     <element label="AMS Accounts" max_length="40" name="x_195647_ams_ams_accounts" type="collection">
         <element label="Active" max_length="40" name="active" type="boolean"/>
         <element label="AWS API key" mandatory="true" max_length="20" name="api_key" type="string"/>
-        <element label="Assignment group" max_length="40" name="assignment_group" reference="sys_user_group" type="reference"/>
-        <element label="Assignment User" max_length="32" name="assignment_user" reference="sys_user" type="reference"/>
-        <element label="Automatically configure User and Group" max_length="40" name="auto_setup" type="boolean"/>
         <element display="true" label="Environment name" mandatory="true" max_length="255" name="environment_name" type="string"/>
-        <element default="snow_connector" label="IAM UserName" max_length="255" name="iam_user_name" type="string"/>
-        <element label="AWS Secret key" mandatory="true" max_length="40" name="secret_key" type="string"/>
-        <index name="index">
-            <element name="assignment_user"/>
-        </index>
-        <index name="index2">
-            <element name="assignment_group"/>
-        </index>
+        <element label="AWS Secret key" mandatory="true" max_length="255" name="secret_key" type="password2"/>
     </element>
 </database>
