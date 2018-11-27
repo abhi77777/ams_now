@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update table="sc_category">
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sc_category">
     <sc_category action="INSERT_OR_UPDATE">
         <active>true</active>
         <description>Create a Service Request for AMS</description>
@@ -36,6 +35,7 @@
     <sys_translated_text action="delete_multiple" query="documentkey=9c2667c74f61130081de224f9310c78f"/>
     <sys_attachment action="INSERT_OR_UPDATE">
         <average_image_color>#ffa000</average_image_color>
+        <chunk_size_bytes/>
         <compressed>true</compressed>
         <content_type>image/png</content_type>
         <file_name>homepage_image</file_name>
@@ -43,6 +43,7 @@
         <image_width>98</image_width>
         <size_bytes>2795</size_bytes>
         <size_compressed>2818</size_compressed>
+        <state/>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-23 12:27:01</sys_created_on>
         <sys_id>1546a7c74f61130081de224f9310c7b4</sys_id>

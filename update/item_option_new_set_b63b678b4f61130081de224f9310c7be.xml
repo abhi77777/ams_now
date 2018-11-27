@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update table="item_option_new_set">
+<?xml version="1.0" encoding="UTF-8"?><record_update table="item_option_new_set">
     <item_option_new_set action="INSERT_OR_UPDATE">
+        <create_roles/>
         <description>AMS Service Request fields</description>
         <display_title>false</display_title>
+        <internal_name>u_ams_service_request</internal_name>
         <layout>normal</layout>
         <name>AMS Service Request</name>
         <order>100</order>
+        <read_roles/>
         <sys_class_name>item_option_new_set</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-23 12:49:03</sys_created_on>
@@ -18,6 +20,8 @@
         <sys_update_name>item_option_new_set_b63b678b4f61130081de224f9310c7be</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2018-04-23 12:49:03</sys_updated_on>
-        <title/>
+        <title>AMS Service Request</title>
+        <type>one_to_one</type>
+        <write_roles/>
     </item_option_new_set>
 </record_update>

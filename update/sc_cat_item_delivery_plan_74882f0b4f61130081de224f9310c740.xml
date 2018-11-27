@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update table="sc_cat_item_delivery_plan">
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sc_cat_item_delivery_plan">
     <sc_cat_item_delivery_plan action="INSERT_OR_UPDATE">
         <active>true</active>
         <advanced>true</advanced>

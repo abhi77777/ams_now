@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update>
+<?xml version="1.0" encoding="UTF-8"?><record_update>
     <sys_dictionary action="INSERT_OR_UPDATE" element="assignment_group" table="x_195647_ams_ams_accounts">
         <active>true</active>
         <array>false</array>
@@ -31,6 +30,8 @@
         <element>assignment_group</element>
         <element_reference>false</element_reference>
         <foreign_database/>
+        <function_definition/>
+        <function_field>false</function_field>
         <internal_type display_value="Reference">reference</internal_type>
         <mandatory>false</mandatory>
         <max_length>40</max_length>
@@ -52,7 +53,7 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-03-06 17:44:10</sys_created_on>
-        <sys_id>8c19af07db1313003d910d53ca961948</sys_id>
+        <sys_id>41fa63cddb86eb0022367dda8c96194f</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Assignment group</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -60,7 +61,7 @@
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_dictionary_x_195647_ams_ams_accounts_assignment_group</sys_update_name>
         <sys_updated_by>system</sys_updated_by>
-        <sys_updated_on>2018-07-19 12:29:09</sys_updated_on>
+        <sys_updated_on>2018-11-27 00:22:13</sys_updated_on>
         <table_reference>false</table_reference>
         <text_index>false</text_index>
         <unique>false</unique>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update table="sys_db_object">
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_db_object">
     <sys_db_object action="INSERT_OR_UPDATE">
         <access>public</access>
         <actions_access>false</actions_access>
@@ -17,7 +16,7 @@
         <number_ref/>
         <provider_class/>
         <read_access>true</read_access>
-        <super_class display_value="Category" name="sc_category">f1d5a1b89942130059a648f6b9979793</super_class>
+        <super_class display_value="Category" name="sc_category">413aa1d6bc802300aadb875973a34b48</super_class>
         <sys_class_code/>
         <sys_class_name>sys_db_object</sys_class_name>
         <sys_class_path/>

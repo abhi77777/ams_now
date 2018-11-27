@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update table="sc_cat_item_category">
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sc_cat_item_category">
     <sc_cat_item_category action="INSERT_OR_UPDATE">
         <sc_cat_item display_value="Access">074da7cb4f61130081de224f9310c71c</sc_cat_item>
         <sc_category display_value="AMS Service Request">9c2667c74f61130081de224f9310c78f</sc_category>

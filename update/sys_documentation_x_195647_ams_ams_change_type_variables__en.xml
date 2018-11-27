@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update>
+<?xml version="1.0" encoding="UTF-8"?><record_update>
     <sys_documentation element="" label="AMS Change Type Variables" language="en" table="x_195647_ams_ams_change_type_variables">
         <sys_documentation action="INSERT_OR_UPDATE">
             <element/>

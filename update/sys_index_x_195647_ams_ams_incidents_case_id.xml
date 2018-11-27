@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update table="sys_index">
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_index">
     <sys_index action="INSERT_OR_UPDATE">
         <col_name_string>case_id</col_name_string>
-        <index_col_name element="case_id" name="x_195647_ams_ams_incidents">bb09af07db1313003d910d53ca961929</index_col_name>
+        <index_col_name element="case_id" name="x_195647_ams_ams_incidents">f4fa63cddb86eb0022367dda8c961914</index_col_name>
         <logical_table_name>x_195647_ams_ams_incidents</logical_table_name>
         <sys_class_name>sys_index</sys_class_name>
         <sys_created_by>admin</sys_created_by>

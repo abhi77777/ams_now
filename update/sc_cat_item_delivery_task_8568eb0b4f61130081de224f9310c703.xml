@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update table="sc_cat_item_delivery_task">
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sc_cat_item_delivery_task">
     <sc_cat_item_delivery_task action="INSERT_OR_UPDATE">
         <assigned_to/>
         <condition/>
