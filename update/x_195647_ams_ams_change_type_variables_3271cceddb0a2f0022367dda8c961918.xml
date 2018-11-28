@@ -2,7 +2,7 @@
     <x_195647_ams_ams_change_type_variables action="INSERT_OR_UPDATE">
         <active>true</active>
         <attributes/>
-        <cat_item display_value="Create replication instance Database Migration Service (DMS)">3671cceddb0a2f0022367dda8c96190a</cat_item>
+        <cat_item/>
         <category/>
         <choice_direction>down</choice_direction>
         <choice_field/>

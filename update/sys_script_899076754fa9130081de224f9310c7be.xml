@@ -5,14 +5,14 @@
         <action_delete>false</action_delete>
         <action_insert>true</action_insert>
         <action_query>false</action_query>
-        <action_update>false</action_update>
+        <action_update>true</action_update>
         <active>true</active>
         <add_message>false</add_message>
         <advanced>true</advanced>
         <change_fields>false</change_fields>
         <client_callable>false</client_callable>
         <collection>change_task</collection>
-        <condition/>
+        <condition>current.short_description == 'Implement'</condition>
         <description/>
         <execute_function>false</execute_function>
         <filter_condition/>
@@ -27,7 +27,8 @@
         <rest_service_text/>
         <rest_variables/>
         <role_conditions/>
-        <script><![CDATA[gs.include('AMSChangeManagementAPI');
+        <script><![CDATA[//condition : current.short_description == 'Implement'
+gs.include('AMSChangeManagementAPI');
 function sleep(ms) {
   var unixtime_ms = new Date().getTime();
   while(new Date().getTime() < unixtime_ms + ms) {}
@@ -35,14 +36,18 @@ function sleep(ms) {
 
 (function executeRule(current, previous) {
   (function createRfc() {
-    if (current.short_description != 'Implement') {return;}
+    gs.info("Push RFC ID: "+current.number);
     var change_request = current.parent.getRefRecord();
-    var CatalogParams = JSON.parse(change_request.implementation_plan);
-    //gs.info("PARSED: "+JSON.stringify(CatalogParams));
-    if (!CatalogParams) {return;}
-    
+    try {
+      var implementation_plan = JSON.parse(change_request.implementation_plan);
+    }
+    catch(err) {
+      gs.error("AMS RFC: Ignoring Change Task ["+ current.number + "]\n"+
+               "Implementation plan: " + err);
+      return false;
+    }
     var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
-    ams_account.addQuery('sys_id','=', String(CatalogParams.EnvironmentId));
+    ams_account.addQuery('sys_id','=', String(implementation_plan.EnvironmentId));
     ams_account.query();
     if (!ams_account.hasNext()) {return;}
     ams_account.next();
@@ -52,17 +57,12 @@ function sleep(ms) {
     };
 
     // Build RFC structure into params object.
-    var params = CatalogParams.RfcParameters;
+    var params = implementation_plan.RfcParameters;
     if (change_request.start_date) {
       params.RequestedStartTime = String(change_request.start_date).replace(" ", "T");
-    } else {
-      params.RequestedStartTime = '';
     }
     if (change_request.end_date) {
       params.RequestedEndTime = String(change_request.end_date).replace(" ", "T");
-    }
-    else {
-      params.RequestedEndTime = '';
     }
     if (change_request.short_description) {
       params.Title = String(change_request.short_description);
@@ -72,7 +72,7 @@ function sleep(ms) {
     if (change_request.description) {
       params.Description = String(change_request.description);
     } else {
-      params.Description = String(change_request.number);
+      params.Description = String("Automated Change Request: " + change_request.number);
     }
     if (change_request.backout_plan) {
       params.RollbackPlan = String(change_request.backout_plan);
@@ -89,7 +89,7 @@ function sleep(ms) {
     } else {
       params.ExpectedOutcome = 'n/a';
     }
-    params.ImplementationPlan = "AMS RFC Execution";
+    params.ImplementationPlan = "Automated RFC Execution";
 
     /*var params = {
       "ChangeTypeId": String(CatalogParams.RfcParameters.ChangeTypeId),
@@ -139,7 +139,7 @@ function sleep(ms) {
       }
     }
     current.update();
-    gs.info("DONE "+RfcId);
+    gs.info("Completed "+RfcId);
 
   })();
 })(current, previous);]]></script>
@@ -149,7 +149,7 @@ function sleep(ms) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>899076754fa9130081de224f9310c7be</sys_id>
-        <sys_mod_count>44</sys_mod_count>
+        <sys_mod_count>55</sys_mod_count>
         <sys_name>PushRfC</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -157,7 +157,7 @@ function sleep(ms) {
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_899076754fa9130081de224f9310c7be</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-04-25 07:49:18</sys_updated_on>
+        <sys_updated_on>2018-11-28 13:37:07</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>

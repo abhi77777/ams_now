@@ -22,7 +22,7 @@ AMSChangeTypesIngestion.prototype = {
       // Must set all application scopes permissions to:
       // read, create, update, delete for the tables below:
       this.catalog_item_table      = 'sc_cat_item_producer';
-      this.question_choice_table   = 'question_choice';
+      this.question_choice_table   = 'x_195647_ams_question_choices';
 
       var sc_category = new GlideRecord('sc_category');
       sc_category.addQuery("title", "=", 'AMS Change Types');
@@ -230,15 +230,15 @@ AMSChangeTypesIngestion.prototype = {
     ingestChangeTypes: function () {
       // creates catalogItems in this.catalog from an array of AMS change types
       // the array is the one produced by AMSChangeManagementAPI.getChangeTypeIds
-      var change_types = this.amscm.getChangeTypeIds();
+      //var change_types = this.amscm.getChangeTypeIds();
       //gs.info("CT "+JSON.stringify(change_types));
-      /*var change_types = [{
+      var change_types = [{
         Category: 'Deployment',
         Subcategory: 'Advanced stack components',
         Item: 'Application Load Balancer',
         Operation: 'Create',
         ChangeTypeId: 'ct-111r1yayblnw4'
-      }];*/
+      }];
       for (var i in change_types) {
         var item = this.ingestChangeType(change_types[i]);
       }
@@ -250,13 +250,13 @@ AMSChangeTypesIngestion.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 21:56:25</sys_created_on>
         <sys_id>0965371bdb1d13004becfabdbf961988</sys_id>
-        <sys_mod_count>103</sys_mod_count>
+        <sys_mod_count>105</sys_mod_count>
         <sys_name>AMSChangeTypesIngestion</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_0965371bdb1d13004becfabdbf961988</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-28 11:54:34</sys_updated_on>
+        <sys_updated_on>2018-11-28 12:18:39</sys_updated_on>
     </sys_script_include>
 </record_update>
