@@ -1,3 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
-    <element attributes="update_synch=true" extends="item_option_new" label="AMS Change Type Variables" max_length="40" name="x_195647_ams_ams_change_type_variables" type="collection"/>
+    <element attributes="update_synch=true" extends="item_option_new" label="AMS Change Type Variables" max_length="40" name="x_195647_ams_ams_change_type_variables" sizeclass="9751" type="collection"/>
 </database>

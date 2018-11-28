@@ -16,12 +16,13 @@ AMSChangeTypesIngestion.prototype = {
         secretAccessKey: String(ams_account.secret_key)
       };
       this.amscm = new AMSChangeManagementAPI(creds);
-      this.catalog_item_table = 'sc_cat_item_producer';
       this.category_table = 'x_195647_ams_ams_change_type_categories';
       this.variable_table = 'x_195647_ams_ams_change_type_variables';
-      this.variable_set_table = 'item_option_new_set';
-      this.variable_set_item_table = 'io_set_item';
       this.producer_table = 'change_request';
+      // Must set all application scopes permissions to:
+      // read, create, update, delete for the tables below:
+      this.catalog_item_table      = 'sc_cat_item_producer';
+      this.question_choice_table   = 'question_choice';
 
       var sc_category = new GlideRecord('sc_category');
       sc_category.addQuery("title", "=", 'AMS Change Types');
@@ -32,30 +33,11 @@ AMSChangeTypesIngestion.prototype = {
       }
     },
 
-    createSet: function (name, property) {
-      var set = new GlideRecord(this.variable_set_table);
-      set.initialize();
-      set.description = property['description'];
-      set.name = name;
-      set.insert();
-      return set;
-    },
-
-    createSetItem: function (name, propery, item, set, order) {
-      var set_item = new GlideRecord(this.variable_set_item_table);
-      set_item.initialize();
-      set_item.sc_cat_item = item.sys_id;
-      set_item.variable_set = set.sys_id;
-      set_item.order = order;
-      set_item.display_name = name;
-      set_item.insert();
-      return this.insertItemVariables(propery, set, 'set', order);
-    },
-
     createVariable: function (name, property, item, type, order) {
       var variable = new GlideRecord(this.variable_table);
       variable.initialize();
       variable.order = order;
+
       if (type == 'item') {
         variable.cat_item = item.sys_id;
       } 
@@ -76,7 +58,7 @@ AMSChangeTypesIngestion.prototype = {
         variable.update();
         var opts = property['enum'];
         for (var o in opts) {
-          choice = new GlideRecord('question_choice');
+          choice = new GlideRecord(this.question_choice_table);
           choice.initialize();
           choice.question = variable.sys_id;
           choice.text = opts[o];
@@ -84,11 +66,12 @@ AMSChangeTypesIngestion.prototype = {
           choice.value = opts[o];
           choice.insert();
         }
-      } else if (property.type == 'boolean') {
+      } 
+      else if (property["type"] == 'boolean') {
         variable.type = 3;
         var opts = ["true", "false"];
         for (var o in opts) {
-          choice = new GlideRecord('question_choice');
+          choice = new GlideRecord(this.question_choice_table);
           choice.initialize();
           choice.question = variable.sys_id;
           choice.text = opts[o];
@@ -96,56 +79,50 @@ AMSChangeTypesIngestion.prototype = {
           choice.value = opts[o];
           choice.insert();
         }
-
-        if (property.hasOwnProperty('default')) {
-          variable.default_value = property["default"];
-        }         
-      } else if (property.type == 'string' || property.type == 'number') {
+      } 
+      else if (property["type"] == 'string' || property["type"] == 'number') {
         variable.type = 6;
-        if (property.hasOwnProperty('default')) {
-          variable.default_value = property["default"];
-        }         
-      } else if (property.type == 'array' ) {
+      } 
+      else if (property["type"] == 'array' ) {
         variable.type = 6;
-        if (property.items.type == 'object') {
-          variable.help_text = "JSON encoded property value, IE:\n" +
-            'Tags: [{"Key":"Application Name","Value":"WordPress"}, {"Key":"Billing Code","Value":"CB12A"}]\n' +
-            property['description'];
+        if (property.items["type"] == 'object') {
+          variable.help_text = "JSON encoded property value, IE:\n"
+                             + 'Tags: [{"Key":"Application Name","Value":"WordPress"}, {"Key":"Billing Code","Value":"CB12A"}]\n'
+                             +  property['description'];
         }
-        if (property.items.type == 'string' || property.items.type == 'number') {
+        else {
           variable.help_text = "Comma separated values of " + property['description']
-            + '\n' + 'IE: SubnetIds: subnet-123456, subnet-654321';
+                             + '\nIE: \nSubnetIds: subnet-123456, subnet-654321';
         }
-        if (property.hasOwnProperty('default')) {
-          variable.default_value = property["default"];
-        }         
+      }
+      if (property.hasOwnProperty('default')) {
+        variable.default_value = property["default"];
       }
 
       variable.update();
-
       return variable;
     },
 
     insertItemVariables: function (schema, item, type, offset) {
-      var order = offset != undefined ? offset : 10;
+      var order = offset == undefined ? 10     : offset;
+      var type  = type   == undefined ? 'item' : type; 
 
       var properties = schema.properties;
       for (var p in properties) {
         order+=1;
-        if (properties[p].type == 'object') {
-          //gs.info("Variable " + p + " Property " + JSON.stringify(properties[p]) + " item " + item.name + " type " + type);
-          var set = this.createSet(p, properties[p]);
-          var set_item = this.createSetItem(p, properties[p], item, set, order);          
-          continue;
+        if (properties[p]["type"] == 'object') {
+          this.insertItemVariables(properties[p], item, type, order);
         }
-        var variable = this.createVariable(p, properties[p], item, type, order);
-        if (properties.hasOwnProperty("required")) {
-          if (properties["required"].indexOf(p) > 0) {
-            variable.mandatory = true;
-            variable.update();
+        else {
+          var variable = this.createVariable(p, properties[p], item, type, order);
+          if (schema.hasOwnProperty("required")) {
+            if (schema["required"].indexOf(p) >= 0) {
+              variable.mandatory = true;
+              variable.update();
+            }
           }
         }
-        //gs.info("Insert variable "+variable.name +" id "+ variable.sys_id);
+        //gs.info("Insert item variable "+variable.name +" id "+ variable.sys_id);
       }
     },
 
@@ -225,27 +202,29 @@ AMSChangeTypesIngestion.prototype = {
       item.sc_catalogs = this.catalog;
       item.category = this.findOrCreateCategoryId(change_type.Category,change_type.Subcategory);
 
-      var change_type_schema = this.amscm.getChangeTypeVersion(
-                                    {ChangeTypeId: String(change_type.ChangeTypeId)});
-      if (change_type_schema) {
-        var execution_input_schema = JSON.parse(change_type_schema.ExecutionInputSchema);
-        item.short_description = execution_input_schema.description;
-        item.insert();
-        this.insertStandardVariables(item, change_type.ChangeTypeId, change_type_schema.Version);
-        var schema_parameters = this.insertItemVariables(execution_input_schema, item, 'item');
-        item.script =  'gs.include("x_195647_ams.AMSRfcGenerator");\n' +
-                       'var generator = new x_195647_ams.AMSRfcGenerator();\n' +
-                       'current.implementation_plan = generator.generate_implementation_plan(producer);';
-        item.update();
-        gs.info("Insert CT " + change_type.ChangeTypeId + ", Item Name: " + item.name + ", Category "+ item.category.sys_name +", Item Id "+item.sys_id);
-      } else {
-        gs.info("Ignoring CT Id: " + change_type.ChangeTypeId );
-      }
-      /*try {
+      try {
+        var change_type_schema = this.amscm.getChangeTypeVersion({
+          ChangeTypeId: String(change_type.ChangeTypeId)
+        });
+        if (change_type_schema) {
+          var execution_input_schema = JSON.parse(change_type_schema.ExecutionInputSchema);
+          item.short_description = execution_input_schema.description;
+          item.insert();
+          this.insertStandardVariables(item, change_type.ChangeTypeId, change_type_schema.Version);
+          this.insertItemVariables(execution_input_schema, item);
+          item.script =  'gs.include("x_195647_ams.AMSRfcGenerator");\n' +
+                         'var generator = new x_195647_ams.AMSRfcGenerator();\n' +
+                         'current.implementation_plan = generator.generate_implementation_plan(producer);';
+          return item.update();
+          //gs.info("Insert CT " + change_type.ChangeTypeId + ", Item Name: " + item.name + ", Category "+ item.category.sys_name +", Item Id "+item.sys_id);
+        } else {
+          return false
+          //gs.info("Ignoring CT Id: " + change_type.ChangeTypeId );
+        }
       } 
       catch(err) {
-        gs.info("Error processing ct "+change_type.ChangeTypeId+ " message "+err.message);
-      }*/
+        gs.info("Ignoring CT "+change_type.ChangeTypeId+ " message "+err.message);
+      }
     },
 
     ingestChangeTypes: function () {
@@ -271,13 +250,13 @@ AMSChangeTypesIngestion.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 21:56:25</sys_created_on>
         <sys_id>0965371bdb1d13004becfabdbf961988</sys_id>
-        <sys_mod_count>83</sys_mod_count>
+        <sys_mod_count>103</sys_mod_count>
         <sys_name>AMSChangeTypesIngestion</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_0965371bdb1d13004becfabdbf961988</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-27 17:24:35</sys_updated_on>
+        <sys_updated_on>2018-11-28 11:54:34</sys_updated_on>
     </sys_script_include>
 </record_update>

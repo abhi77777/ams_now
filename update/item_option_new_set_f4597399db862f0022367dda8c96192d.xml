@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="item_option_new_set">
+    <item_option_new_set action="INSERT_OR_UPDATE">
+        <create_roles/>
+        <description>Specifications for the stack.</description>
+        <display_title>false</display_title>
+        <internal_name>u_parameters</internal_name>
+        <layout>normal</layout>
+        <name>Parameters</name>
+        <order>100</order>
+        <read_roles/>
+        <sys_class_name>item_option_new_set</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-27 20:03:27</sys_created_on>
+        <sys_id>f4597399db862f0022367dda8c96192d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Parameters</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>item_option_new_set_f4597399db862f0022367dda8c96192d</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-27 20:03:27</sys_updated_on>
+        <title>Parameters</title>
+        <type>one_to_one</type>
+        <write_roles/>
+    </item_option_new_set>
+</record_update>
