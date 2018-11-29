@@ -12,17 +12,18 @@ AMSChangeTypesIngestion.prototype = {
     initialize: function(ams_account) {
       this.ams_account = ams_account;
       var creds = {
-        accessKeyId: String(ams_account.api_key),
-        secretAccessKey: String(ams_account.secret_key)
+          accessKeyId: String(ams_account.api_key),
+          secretAccessKey: ams_account.secret_key.getDecryptedValue()
       };
       this.amscm = new AMSChangeManagementAPI(creds);
+      this.choice_table   = 'x_195647_ams_question_choices';
       this.category_table = 'x_195647_ams_ams_change_type_categories';
       this.variable_table = 'x_195647_ams_ams_change_type_variables';
       this.producer_table = 'change_request';
       // Must set all application scopes permissions to:
       // read, create, update, delete for the tables below:
-      this.catalog_item_table      = 'sc_cat_item_producer';
-      this.question_choice_table   = 'x_195647_ams_question_choices';
+      this.catalog_item_table = 'sc_cat_item_producer';
+      
 
       var sc_category = new GlideRecord('sc_category');
       sc_category.addQuery("title", "=", 'AMS Change Types');
@@ -58,7 +59,7 @@ AMSChangeTypesIngestion.prototype = {
         variable.update();
         var opts = property['enum'];
         for (var o in opts) {
-          choice = new GlideRecord(this.question_choice_table);
+          choice = new GlideRecord(this.choice_table);
           choice.initialize();
           choice.question = variable.sys_id;
           choice.text = opts[o];
@@ -71,7 +72,7 @@ AMSChangeTypesIngestion.prototype = {
         variable.type = 3;
         var opts = ["true", "false"];
         for (var o in opts) {
-          choice = new GlideRecord(this.question_choice_table);
+          choice = new GlideRecord(this.choice_table);
           choice.initialize();
           choice.question = variable.sys_id;
           choice.text = opts[o];
@@ -186,6 +187,25 @@ AMSChangeTypesIngestion.prototype = {
       variable.insert();
     },
 
+    insertCTSchema: function(schema) {
+      var change_type = new GlideRecord('x_195647_ams_change_types');
+      change_type.addQuery('version', schema.Version);
+      change_type.addQuery('change_type_id', schema.ChangeTypeId);
+      change_type.query();
+      if (!change_type.hasNext()) {
+        change_type.initialize();
+        change_type.version = schema.Version;
+        change_type.change_type_id = schema.ChangeTypeId;
+        change_type.change_type_schema = JSON.stringify(schema);
+        change_type.insert();
+        return change_type;
+      }
+      else {
+        change_type.next();
+        return change_type;
+      }
+    },
+
     ingestChangeType: function(change_type) {
       // creates or replaces a record producer from an AMS CT.
       var item_name = change_type.Operation +' '+ change_type.Item;
@@ -210,16 +230,17 @@ AMSChangeTypesIngestion.prototype = {
           var execution_input_schema = JSON.parse(change_type_schema.ExecutionInputSchema);
           item.short_description = execution_input_schema.description;
           item.insert();
+          this.insertCTSchema(change_type_schema);
           this.insertStandardVariables(item, change_type.ChangeTypeId, change_type_schema.Version);
           this.insertItemVariables(execution_input_schema, item);
           item.script =  'gs.include("x_195647_ams.AMSRfcGenerator");\n' +
                          'var generator = new x_195647_ams.AMSRfcGenerator();\n' +
                          'current.implementation_plan = generator.generate_implementation_plan(producer);';
-          return item.update();
           //gs.info("Insert CT " + change_type.ChangeTypeId + ", Item Name: " + item.name + ", Category "+ item.category.sys_name +", Item Id "+item.sys_id);
+          return item.update();
         } else {
-          return false
           //gs.info("Ignoring CT Id: " + change_type.ChangeTypeId );
+          return false;
         }
       } 
       catch(err) {
@@ -230,15 +251,14 @@ AMSChangeTypesIngestion.prototype = {
     ingestChangeTypes: function () {
       // creates catalogItems in this.catalog from an array of AMS change types
       // the array is the one produced by AMSChangeManagementAPI.getChangeTypeIds
-      //var change_types = this.amscm.getChangeTypeIds();
-      //gs.info("CT "+JSON.stringify(change_types));
-      var change_types = [{
+      var change_types = this.amscm.getChangeTypeIds();
+      /*var change_types = [{
         Category: 'Deployment',
         Subcategory: 'Advanced stack components',
         Item: 'Application Load Balancer',
         Operation: 'Create',
         ChangeTypeId: 'ct-111r1yayblnw4'
-      }];
+      }];*/
       for (var i in change_types) {
         var item = this.ingestChangeType(change_types[i]);
       }
@@ -250,13 +270,13 @@ AMSChangeTypesIngestion.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-11 21:56:25</sys_created_on>
         <sys_id>0965371bdb1d13004becfabdbf961988</sys_id>
-        <sys_mod_count>105</sys_mod_count>
+        <sys_mod_count>122</sys_mod_count>
         <sys_name>AMSChangeTypesIngestion</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_include_0965371bdb1d13004becfabdbf961988</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-28 12:18:39</sys_updated_on>
+        <sys_updated_on>2018-11-29 08:53:02</sys_updated_on>
     </sys_script_include>
 </record_update>

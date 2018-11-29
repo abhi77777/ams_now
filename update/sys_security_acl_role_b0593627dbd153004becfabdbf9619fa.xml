@@ -13,7 +13,7 @@
         <sys_update_name>sys_security_acl_role_b0593627dbd153004becfabdbf9619fa</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2018-04-12 12:11:55</sys_updated_on>
-        <sys_user_role display_value="x_195647_ams.user" name="x_195647_ams.user">87d53f6cdb6c13004becfabdbf9619ee</sys_user_role>
+        <sys_user_role display_value="x_195647_ams.Admin" name="x_195647_ams.Admin">87d53f6cdb6c13004becfabdbf9619ee</sys_user_role>
         <transaction_id/>
     </sys_security_acl_role>
 </record_update>

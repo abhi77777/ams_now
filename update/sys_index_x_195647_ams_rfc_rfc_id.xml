@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_index">
+    <sys_index action="INSERT_OR_UPDATE">
+        <col_name_string>rfc_id</col_name_string>
+        <index_col_name element="rfc_id" name="x_195647_ams_rfc">242afb21dbc66f0022367dda8c961921</index_col_name>
+        <logical_table_name>x_195647_ams_rfc</logical_table_name>
+        <sys_class_name>sys_index</sys_class_name>
+        <sys_created_by>system</sys_created_by>
+        <sys_created_on>2018-11-28 14:47:56</sys_created_on>
+        <sys_id>7cbaff61dbc66f0022367dda8c961994</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_195647_ams_rfc</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sys_index_x_195647_ams_rfc_rfc_id</sys_update_name>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2018-11-28 14:47:56</sys_updated_on>
+        <table display_value="AMS Requests For Change (RFC)" name="x_195647_ams_rfc">4a42326ddb426f0022367dda8c96198f</table>
+        <unique_index>true</unique_index>
+    </sys_index>
+</record_update>

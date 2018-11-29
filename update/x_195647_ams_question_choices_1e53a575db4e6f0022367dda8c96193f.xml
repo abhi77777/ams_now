@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="x_195647_ams_question_choices">
+    <x_195647_ams_question_choices action="INSERT_OR_UPDATE">
+        <misc>0</misc>
+        <order>100</order>
+        <question display_value="Volume3Type">1a53a575db4e6f0022367dda8c96191a</question>
+        <rec_misc>0</rec_misc>
+        <sys_class_name>x_195647_ams_question_choices</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-28 22:25:09</sys_created_on>
+        <sys_id>1e53a575db4e6f0022367dda8c96193f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>standard</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>x_195647_ams_question_choices_1e53a575db4e6f0022367dda8c96193f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-28 22:25:09</sys_updated_on>
+        <text>standard</text>
+        <value>standard</value>
+    </x_195647_ams_question_choices>
+    <fx_price action="delete_multiple" query="id=1e53a575db4e6f0022367dda8c96193f"/>
+    <fx_price action="INSERT_OR_UPDATE">
+        <amount>0</amount>
+        <currency display_value="USD">USD</currency>
+        <field>misc</field>
+        <id>1e53a575db4e6f0022367dda8c96193f</id>
+        <parent/>
+        <reference_amount>0</reference_amount>
+        <reference_currency display_value="USD">USD</reference_currency>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-28 22:25:09</sys_created_on>
+        <sys_id>9653a575db4e6f0022367dda8c961941</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-28 22:25:09</sys_updated_on>
+        <table>x_195647_ams_question_choices</table>
+        <type>calculated</type>
+    </fx_price>
+    <fx_price action="INSERT_OR_UPDATE">
+        <amount>0</amount>
+        <currency display_value="USD">USD</currency>
+        <field>rec_misc</field>
+        <id>1e53a575db4e6f0022367dda8c96193f</id>
+        <parent/>
+        <reference_amount>0</reference_amount>
+        <reference_currency display_value="USD">USD</reference_currency>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-11-28 22:25:09</sys_created_on>
+        <sys_id>1653a575db4e6f0022367dda8c961940</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-11-28 22:25:09</sys_updated_on>
+        <table>x_195647_ams_question_choices</table>
+        <type>calculated</type>
+    </fx_price>
+</record_update>

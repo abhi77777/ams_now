@@ -28,7 +28,7 @@
         <sys_updated_on>2018-02-25 02:07:32</sys_updated_on>
         <template/>
         <trackable>true</trackable>
-        <user_role display_value="x_195647_ams.user" name="x_195647_ams.user">87d53f6cdb6c13004becfabdbf9619ee</user_role>
+        <user_role display_value="x_195647_ams.Admin" name="x_195647_ams.Admin">87d53f6cdb6c13004becfabdbf9619ee</user_role>
         <vendor/>
         <vendor_prefix/>
         <version>1.0.0</version>

@@ -34,29 +34,72 @@ function sleep(ms) {
   while(new Date().getTime() < unixtime_ms + ms) {}
 }
 
+function parseImplementationPlan (value) {
+  try {
+    var implementation_plan = JSON.parse(value);
+    return implementation_plan;
+  }
+  catch(err) {
+    gs.error("Implementation plan: " + err);
+    return false;
+  }
+}
+
+function retryInstructions(rfc) {
+  return "\nSet retry in the RFC record below and add a work note in this task to try again."+
+          "\nhttps://" + gs.getProperty("instance_name") + ".service-now.com/x_195647_ams_rfc.do" + "?sys_id=" + rfc.sys_id;
+}
+
 (function executeRule(current, previous) {
   (function createRfc() {
     gs.info("Push RFC ID: "+current.number);
     var change_request = current.parent.getRefRecord();
-    try {
-      var implementation_plan = JSON.parse(change_request.implementation_plan);
+    
+    var rfc = new GlideRecord('x_195647_ams_rfc');
+    rfc.addQuery('change_task', current.sys_id);
+    rfc.addQuery('change_request', change_request.sys_id);
+    rfc.query();
+    if (rfc.hasNext()) {
+      rfc.next();
+      if (rfc.status == 'error' && rfc.retry) {
+        rfc.retry = false;
+        rfc.rfc_id = null;
+        rfc.status = null;
+      } 
+    else {
+        return;
+      }
+    } else {
+      rfc.initialize();
+      rfc.change_request = change_request.sys_id;
+      rfc.change_task = current.sys_id;
     }
-    catch(err) {
-      gs.error("AMS RFC: Ignoring Change Task ["+ current.number + "]\n"+
-               "Implementation plan: " + err);
-      return false;
+
+    var implementation_plan = parseImplementationPlan(change_request.implementation_plan);
+    if (!implementation_plan) {
+      rfc.status = 'error';
+      rfc.rfc_id = current.number;
+      rfc.update();
+      current.work_notes = "AMS RFC: Failed to create RFC for ["+ current.number + "], "+
+                           "invalid change implementation plan, "+
+                           "see Implementation plan erros in the system log." +
+                           retryInstructions(rfc);
+                         
+      current.update();
+      return;
     }
+    
     var ams_account = new GlideRecord('x_195647_ams_ams_accounts');
     ams_account.addQuery('sys_id','=', String(implementation_plan.EnvironmentId));
     ams_account.query();
     if (!ams_account.hasNext()) {return;}
     ams_account.next();
     var creds = {
-      accessKeyId: ams_account.api_key,
-      secretAccessKey: ams_account.secret_key
+        accessKeyId: String(ams_account.api_key),
+        secretAccessKey: ams_account.secret_key.getDecryptedValue()
     };
 
-    // Build RFC structure into params object.
+    // Map change request information into AMS RFC.
     var params = implementation_plan.RfcParameters;
     if (change_request.start_date) {
       params.RequestedStartTime = String(change_request.start_date).replace(" ", "T");
@@ -91,28 +134,34 @@ function sleep(ms) {
     }
     params.ImplementationPlan = "Automated RFC Execution";
 
-    /*var params = {
-      "ChangeTypeId": String(CatalogParams.RfcParameters.ChangeTypeId),
-      "ChangeTypeVersion": String(CatalogParams.RfcParameters.ChangeTypeVersion),
-      "Description": "AMSTestNoOpsActionRequired",
-      "ExecutionParameters": String(CatalogParams.RfcParameters.ExecutionParameters),
-      "ExpectedOutcome": "n/a",
-      "ImplementationPlan": "n/a",
-      "RequestedEndTime": "",
-      "RequestedStartTime": "",
-      "RollbackPlan": "n/a",
-      "Title": "AMSTestNoOpsActionRequired",
-      "WorstCaseScenario": "n/a"
-    };*/
-
+    //Create RFC
     CmApi = new AMSChangeManagementAPI(creds);
     RfcId = CmApi.createRfc(params);
-    if (!RfcId) {gs.info("Failed to create RFC.") ;return;}
-    current.comments = "Created RFC: " + RfcId;
-    current.update();
-    gs.info("Created RFC ID:"+RfcId);
-    CmApi.submitRfc({"RfcId":RfcId});
+    if (!RfcId) {
+      rfc.status = 'error';
+      rfc.rfc_id = current.number;
+      rfc.update();
+      current.work_notes = "AMS RFC: Failed to create RFC for ["+ current.number + "], "+
+                         "Check system logs for AMSCM API request error." +
+                         retryInstructions(rfc);
 
+      current.update();
+      return;
+    }
+    else {
+      rfc.rfc_id = RfcId;
+      rfc.status = 'editing';
+      rfc.insert();
+    }
+
+    current.work_notes = "Created AMS RFC, ID: " + RfcId;
+    current.update();
+    if (!CmApi.submitRfc({"RfcId":RfcId})) { 
+    };
+    rfc.status = '';
+    current.work_notes = "Submitted AMS RFC, ID: " + RfcId;
+    current.update();
+    
     var status = '';
     while ( status == '' ) {
       sleep(10000);
@@ -120,36 +169,37 @@ function sleep(ms) {
       if (Rfc.Status.Id == 'Canceled') {
         status = Rfc.Status.Id;
         current.state = 4;
-        current.comments = "Cancel Reason: " + Rfc.StatusReason;
+        current.work_notes = "Cancel Reason: " + Rfc.StatusReason;
       }
       if (Rfc.Status.Id == 'Failure') {
         status = Rfc.Status.Id;
         current.state = 4;
-        current.comments = "Failure Reason: " + Rfc.StatusReason;
+        current.work_notes = "Failure Reason: " + Rfc.StatusReason;
       }
       if (Rfc.Status.Id == 'Rejected') {
         status = Rfc.Status.Id;
         current.state = 4;
-        current.comments = "Rejected Reason: " + Rfc.StatusReason;
+        current.work_notes = "Rejected Reason: " + Rfc.StatusReason;
       }
       if (Rfc.Status.Id == 'Success') {
         status = Rfc.Status.Id;
         current.state = 3;
-        current.comments = "Execution Output: " + Rfc.ExecutionOutput;
+        current.work_notes = "Execution Output: \n" + (new JSON()).decode(Rfc.ExecutionOutput);
       }
     }
     current.update();
     gs.info("Completed "+RfcId);
 
   })();
-})(current, previous);]]></script>
+})(current, previous);
+]]></script>
         <sys_class_name>sys_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-19 11:20:42</sys_created_on>
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>899076754fa9130081de224f9310c7be</sys_id>
-        <sys_mod_count>55</sys_mod_count>
+        <sys_mod_count>74</sys_mod_count>
         <sys_name>PushRfC</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -157,7 +207,7 @@ function sleep(ms) {
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_899076754fa9130081de224f9310c7be</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-28 13:37:07</sys_updated_on>
+        <sys_updated_on>2018-11-29 08:54:28</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>
