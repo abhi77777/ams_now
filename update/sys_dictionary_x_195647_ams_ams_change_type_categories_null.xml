@@ -53,7 +53,7 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-04-12 12:11:55</sys_created_on>
-        <sys_id>f8fa63cddb86eb0022367dda8c961902</sys_id>
+        <sys_id>d9481aaa371f2300cf19ded993990e45</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>x_195647_ams_ams_change_type_categories</sys_name>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -61,7 +61,7 @@
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_dictionary_x_195647_ams_ams_change_type_categories_NULL</sys_update_name>
         <sys_updated_by>system</sys_updated_by>
-        <sys_updated_on>2018-11-27 00:22:14</sys_updated_on>
+        <sys_updated_on>2019-02-01 13:30:42</sys_updated_on>
         <table_reference>false</table_reference>
         <text_index>false</text_index>
         <unique>false</unique>

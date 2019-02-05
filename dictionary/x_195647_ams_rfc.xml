@@ -10,10 +10,10 @@
             <element name="change_task"/>
         </index>
         <index name="index2">
-            <element name="change_task"/>
+            <element name="rfc_id"/>
         </index>
         <index name="index3">
-            <element name="rfc_id"/>
+            <element name="change_task"/>
         </index>
     </element>
 </database>

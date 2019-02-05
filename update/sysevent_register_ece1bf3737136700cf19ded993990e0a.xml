@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sysevent_register">
+    <sysevent_register action="INSERT_OR_UPDATE">
+        <description/>
+        <event_name>x_195647_ams.updateRfc</event_name>
+        <fired_by/>
+        <queue/>
+        <suffix>updateRfc</suffix>
+        <sys_class_name>sysevent_register</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-05 17:14:48</sys_created_on>
+        <sys_id>ece1bf3737136700cf19ded993990e0a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_195647_ams.updateRfc</sys_name>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sysevent_register_ece1bf3737136700cf19ded993990e0a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-05 17:14:48</sys_updated_on>
+        <table>x_195647_ams_rfc</table>
+    </sysevent_register>
+</record_update>

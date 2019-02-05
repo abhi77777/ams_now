@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update table="sys_index">
     <sys_index action="INSERT_OR_UPDATE">
         <col_name_string>rfc_id</col_name_string>
-        <index_col_name element="rfc_id" name="x_195647_ams_rfc">242afb21dbc66f0022367dda8c961921</index_col_name>
+        <index_col_name element="rfc_id" name="x_195647_ams_rfc">ed481aaa371f2300cf19ded993990e8b</index_col_name>
         <logical_table_name>x_195647_ams_rfc</logical_table_name>
         <sys_class_name>sys_index</sys_class_name>
         <sys_created_by>system</sys_created_by>

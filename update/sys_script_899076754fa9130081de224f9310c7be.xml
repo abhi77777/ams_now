@@ -29,10 +29,6 @@
         <role_conditions/>
         <script><![CDATA[//condition : current.short_description == 'Implement'
 gs.include('AMSChangeManagementAPI');
-function sleep(ms) {
-  var unixtime_ms = new Date().getTime();
-  while(new Date().getTime() < unixtime_ms + ms) {}
-}
 
 function parseImplementationPlan (value) {
   try {
@@ -157,38 +153,13 @@ function retryInstructions(rfc) {
     current.work_notes = "Created AMS RFC, ID: " + RfcId;
     current.update();
     if (!CmApi.submitRfc({"RfcId":RfcId})) { 
-    };
-    rfc.status = '';
+      gs.error("Failed to submit RFC " + RfcId);
+      return;
+    }
     current.work_notes = "Submitted AMS RFC, ID: " + RfcId;
     current.update();
-    
-    var status = '';
-    while ( status == '' ) {
-      sleep(10000);
-      var Rfc = CmApi.getRfc({"RfcId":RfcId});
-      if (Rfc.Status.Id == 'Canceled') {
-        status = Rfc.Status.Id;
-        current.state = 4;
-        current.work_notes = "Cancel Reason: " + Rfc.StatusReason;
-      }
-      if (Rfc.Status.Id == 'Failure') {
-        status = Rfc.Status.Id;
-        current.state = 4;
-        current.work_notes = "Failure Reason: " + Rfc.StatusReason;
-      }
-      if (Rfc.Status.Id == 'Rejected') {
-        status = Rfc.Status.Id;
-        current.state = 4;
-        current.work_notes = "Rejected Reason: " + Rfc.StatusReason;
-      }
-      if (Rfc.Status.Id == 'Success') {
-        status = Rfc.Status.Id;
-        current.state = 3;
-        current.work_notes = "Execution Output: \n" + (new JSON()).decode(Rfc.ExecutionOutput);
-      }
-    }
-    current.update();
-    gs.info("Completed "+RfcId);
+    // queue RFC update poller.
+    gs.eventQueue("x_195647_ams.updateRfc", rfc);
 
   })();
 })(current, previous);
@@ -199,7 +170,7 @@ function retryInstructions(rfc) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>899076754fa9130081de224f9310c7be</sys_id>
-        <sys_mod_count>74</sys_mod_count>
+        <sys_mod_count>76</sys_mod_count>
         <sys_name>PushRfC</sys_name>
         <sys_overrides/>
         <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
@@ -207,7 +178,7 @@ function retryInstructions(rfc) {
         <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
         <sys_update_name>sys_script_899076754fa9130081de224f9310c7be</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-11-29 08:54:28</sys_updated_on>
+        <sys_updated_on>2019-02-05 17:30:19</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>

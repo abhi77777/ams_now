@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sysevent_script_action">
+    <sysevent_script_action action="INSERT_OR_UPDATE">
+        <active>false</active>
+        <condition_script/>
+        <description/>
+        <event_name>x_195647_ams.updateRfc</event_name>
+        <name>UpdateRfc</name>
+        <order>100</order>
+        <script><![CDATA[gs.include('AMSChangeManagementAPI');
+ //receives instance of rfc reference table
+(function executeRule(current, previous) {
+  var Rfc = CmApi.getRfc({"RfcId":current.rfc_id});
+  switch(Rfc.Status.Id) {
+    case 'Canceled':
+      current.state = 4;
+      current.work_notes = "Cancel Reason: " + Rfc.StatusReason;   
+      break;
+    case 'Failure':
+      current.state = 4;
+      current.work_notes = "Failure Reason: " + Rfc.StatusReason;
+      break;
+    case 'Rejected':
+      current.state = 4;
+      current.work_notes = "Rejected Reason: " + Rfc.StatusReason;
+      break;
+    case 'Success':
+      current.state = 3;
+      current.work_notes = "Execution Output: \n" + (new JSON()).decode(Rfc.ExecutionOutput);
+      break;
+    default:
+      gs.eventQueue("x_195647_ams.updateRfc", current);
+  }
+  current.update();
+})(current, previous);
+
+]]></script>
+        <synchronous>false</synchronous>
+        <sys_class_name>sysevent_script_action</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-02-05 17:32:27</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>1295b33b37136700cf19ded993990e4a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>UpdateRfc</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="AMS" source="x_195647_ams">8bd5ffa8db6c13004becfabdbf96194f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="AMS">8bd5ffa8db6c13004becfabdbf96194f</sys_scope>
+        <sys_update_name>sysevent_script_action_1295b33b37136700cf19ded993990e4a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-02-05 17:32:27</sys_updated_on>
+    </sysevent_script_action>
+</record_update>
